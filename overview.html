@@ -1,0 +1,1565 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Operator's guide for the Addverb 6-DOF arm running as a teleoperation leader against an Isaac Lab sim follower with VLA-format dataset collection.
+">
+      
+      
+      
+      
+        <link rel="prev" href="index.html">
+      
+      
+        <link rel="next" href="architecture.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/left-logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Overview - Addverb Arm — Sim-to-Real Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#addverb-arms-isaac-lab-hybrid-development-environment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-header__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+      
+  <img src="assets/left-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Addverb Arm — Sim-to-Real Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="overview.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="architecture.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture & Setup
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="isaac-lab.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Isaac Lab Notes
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="data-collection.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Collection
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="real-hardware-data-collection.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Real-Hardware Data Collection
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="sim-to-real-training.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Sim-to-Real Training (DR, GR00T, Co-training)
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-nav__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+      
+  <img src="assets/left-logo.png" alt="logo">
+
+    </a>
+    Addverb Arm — Sim-to-Real Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="overview.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-sim-to-real-pipeline-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full sim-to-real pipeline at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-nvidia-container-toolkit-if-not-installed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install NVIDIA Container Toolkit (if not installed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-the-host-conda-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Set up the HOST Conda environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-build-the-addverb-arms-c-pybind-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Build the Addverb Arms C++ pybind module
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-build-the-docker-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Build the Docker image
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quickest-path-single-config-launchers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quickest path — single-config launchers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickest path — single-config launchers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calibration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminal-a-host-start-the-bridge-sender" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal A — Host: Start the bridge sender
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Terminal A — Host: Start the bridge sender">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#without-hardware-mock-sine-wave-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without hardware (mock sine wave for testing):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-real-hardware-can-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With real hardware (CAN bus):
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminal-b-container-launch-isaac-sim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal B — Container: Launch Isaac Sim
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-test-no-hardware-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Test (No Hardware Required)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Test (No Hardware Required)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terminal-a-start-mock-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal A — start mock bridge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminal-b-launch-sim-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal B — launch sim container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addverb_isaaclabconfigbridge_configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addverb_isaaclab/config/bridge_config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addverb_isaaclabconfigagent_configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addverb_isaaclab/config/agent_config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-conflict-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Conflict Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isaac-sim-window-doesnt-appear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isaac Sim window doesn't appear
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmq-agent-shows-joints-is-none-no-data-received" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMQ: agent shows joints is None (no data received)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-cant-access-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker can't access GPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch_bridgesh-aborts-with-conda_build-unbound-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        launch_bridge.sh aborts with CONDA_BUILD: unbound variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-interface-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CAN interface not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture & Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="isaac-lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Lab Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="data-collection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="real-hardware-data-collection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-Hardware Data Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sim-to-real-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sim-to-Real Training (DR, GR00T, Co-training)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="addverb-arms-isaac-lab-hybrid-development-environment">Addverb Arms + Isaac Lab — Hybrid Development Environment<a class="headerlink" href="#addverb-arms-isaac-lab-hybrid-development-environment" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Hardware on host. Simulation in Docker. Connected by ZMQ.</strong></p>
+</blockquote>
+<h2 id="documentation-map">Documentation map<a class="headerlink" href="#documentation-map" title="Permanent link">&para;</a></h2>
+<p>This README is the <strong>Overview</strong> page of the docs site. The full set of
+operator guides is published at <a href="index.html">docs.local</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="overview.html">Overview</a></td>
+<td>This file — architecture, prerequisites, quick start, validation, project layout, configuration reference, troubleshooting.</td>
+</tr>
+<tr>
+<td><a href="architecture.html">Architecture &amp; Setup</a></td>
+<td>Detailed <code>addverb_isaaclab/</code> package layout, scene/USD/camera config, full pipeline run-through.</td>
+</tr>
+<tr>
+<td><a href="isaac-lab.html">Isaac Lab Notes</a></td>
+<td>Hybrid host + container architecture, GPU/X11 passthrough, Docker build internals.</td>
+</tr>
+<tr>
+<td><a href="data-collection.html">Data Collection (Sim)</a></td>
+<td>Hardware leader → Isaac Sim follower; calibration, 3-terminal flow, Parquet+JPEG output, multi-episode.</td>
+</tr>
+<tr>
+<td><a href="real-hardware-data-collection.html">Real-Hardware Data Collection</a></td>
+<td>Same dataset format captured on the physical arm with USB cameras (no sim).</td>
+</tr>
+<tr>
+<td><a href="sim-to-real-training.html">Sim-to-Real Training</a></td>
+<td>Domain randomisation → GR00T N1.5 fine-tune → sim eval → real eval → co-training.</td>
+</tr>
+</tbody>
+</table>
+<p>If you are new, read this page, then jump to whichever page
+matches your task — calibration &amp; teleop go to <em>Data Collection (Sim)</em>,
+physical-arm captures go to <em>Real-Hardware Data Collection</em>, and
+training/eval flows live in <em>Sim-to-Real Training</em>.</p>
+<hr />
+<h2 id="full-sim-to-real-pipeline-at-a-glance">Full sim-to-real pipeline at a glance<a class="headerlink" href="#full-sim-to-real-pipeline-at-a-glance" title="Permanent link">&para;</a></h2>
+<p>The repository covers the complete sim-to-real loop for the 7-DoF
+Addverb arm (6 revolute + 1 prismatic gripper). Five stages, each
+documented in detail on its own page:</p>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    S1["&lt;b&gt;1. CAPTURE&lt;/b&gt;&lt;br/&gt;Teleop with DR&lt;br/&gt;(or real arm)&lt;br/&gt;→ Parquet + JPEG"]
+    S2["&lt;b&gt;2. TRAIN&lt;/b&gt;&lt;br/&gt;GR00T N1.6 fine-tune&lt;br/&gt;50–200 demos&lt;br/&gt;10 000 steps · 24 GB+ GPU"]
+    S3["&lt;b&gt;3. EVAL (sim)&lt;/b&gt;&lt;br/&gt;Same env + DR&lt;br/&gt;≥ 50–70 % target&lt;br/&gt;over ≥ 30 rollouts"]
+    S4["&lt;b&gt;4. EVAL (real)&lt;/b&gt;&lt;br/&gt;Same policy server&lt;br/&gt;+ physical arm client"]
+    S5["&lt;b&gt;5. CO-TRAIN&lt;/b&gt;&lt;br/&gt;Mix few real +&lt;br/&gt;many sim demos"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4
+    S4 -- if sim-to-real gap is large --&gt; S5
+    S5 -- back to (2) --&gt; S2
+
+    classDef capture fill:#FEF3C7,stroke:#B45309,color:#78350F;
+    classDef train   fill:#DBEAFE,stroke:#1D4ED8,color:#1E3A8A;
+    classDef eval    fill:#DCFCE7,stroke:#15803D,color:#14532D;
+    classDef cotrain fill:#FCE7F3,stroke:#BE185D,color:#831843;
+    class S1 capture;
+    class S2 train;
+    class S3,S4 eval;
+    class S5 cotrain;</code></pre>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Doc page</th>
+<th>What it produces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1a. Sim capture (with DR)</td>
+<td><a href="data-collection.html">Data Collection (Sim)</a></td>
+<td><code>addverb_sim_dataset/</code> — Parquet + JPEG, 30 Hz, 7-DoF, randomised lighting/camera/asset pose</td>
+</tr>
+<tr>
+<td>1b. Real-hardware capture</td>
+<td><a href="real-hardware-data-collection.html">Real-Hardware Data Collection</a></td>
+<td><code>addverb_single_arm_dataset/</code> — same schema, three USB cameras</td>
+</tr>
+<tr>
+<td>2. GR00T N1.6 fine-tune</td>
+<td><a href="sim-to-real-training.html">Sim-to-Real Training § Stage 2</a></td>
+<td>A LoRA / fine-tuned checkpoint (10 000 steps, batch 32, lr 1e-4)</td>
+</tr>
+<tr>
+<td>3. Sim evaluation</td>
+<td><a href="sim-to-real-training.html">Sim-to-Real Training § Stage 3</a></td>
+<td>Success rate over ≥ 30 rollouts in <code>Addverb-Teleop-Cam-v0-Eval</code></td>
+</tr>
+<tr>
+<td>4. Real-hardware evaluation</td>
+<td><a href="sim-to-real-training.html">Sim-to-Real Training § Stage 4</a></td>
+<td>Real-arm rollout success rate, safety-gated</td>
+</tr>
+<tr>
+<td>5. Strategy-2 co-training</td>
+<td><a href="sim-to-real-training.html">Sim-to-Real Training § Stage 5</a></td>
+<td>Mixed sim+real dataset; loops back to Stage 2</td>
+</tr>
+</tbody>
+</table>
+<p>Domain-randomisation ranges (lighting EV, camera focal length /
+pose, workspace mat yaw, cube spawn) live in
+<code>addverb_isaaclab/config/isaac_scene_config.yaml → domain_randomization</code>
+and are applied as reset events in
+<code>addverb_isaaclab/sim_agent/mdp/resets.py</code> — change them in one
+place and they propagate to every captured episode.</p>
+<p>The dataset format is <strong>identical</strong> between sim and real captures, which
+is what makes Stage 5 co-training straightforward — point the trainer at
+a directory containing both Parquet roots and let the sampler do the
+mixing.</p>
+<hr />
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart TB
+    subgraph HOST["HOST MACHINE — conda: unified_addverb_isaaclab"]
+        direction TB
+        DRV["Addverb Arms C++ driver&lt;br/&gt;(pybind11 .so)"]
+        BR["bridge_sender.py&lt;br/&gt;&lt;i&gt;or&lt;/i&gt; mock_bridge_sender.py"]
+        PUB["ZMQ PUB → tcp://0.0.0.0:5556"]
+        DRV --&gt; BR --&gt; PUB
+    end
+
+    subgraph CON["DOCKER CONTAINER — addverb-isaaclab:latest&lt;br/&gt;Base: nvcr.io/nvidia/isaac-lab:2.3.2"]
+        direction TB
+        SUB["addverb_agent.py (ZMQ SUB)"]
+        KM["KinematicMapper → Isaac Sim joint targets"]
+        ISAAC["Isaac Lab / Omniverse GPU physics"]
+        LOG["Optional: SimDataLogger → /workspace/datasets"]
+        SUB --&gt; KM --&gt; ISAAC --&gt; LOG
+    end
+
+    PUB == "ZMQ JSON frames @ 200 Hz&lt;br/&gt;tcp://localhost:5556 (--network=host)" ==&gt; SUB
+
+    GPU(["GPU passthrough — --gpus all"]):::infra
+    X11(["X11 passthrough — DISPLAY + /tmp/.X11-unix"]):::infra
+    GPU --- CON
+    X11 --- CON
+
+    classDef infra fill:#E5E7EB,stroke:#6B7280,color:#111827,font-style:italic;
+    style HOST fill:#EFF6FF,stroke:#1D4ED8,color:#1E3A8A
+    style CON  fill:#ECFDF5,stroke:#047857,color:#064E3B</code></pre>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS</td>
+<td>Ubuntu ≥ 22.04</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>NVIDIA RTX (Ada / Blackwell recommended)</td>
+</tr>
+<tr>
+<td>NVIDIA Driver</td>
+<td>≥ 525 (your system: 580.126.09)</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>≥ 24.0</td>
+</tr>
+<tr>
+<td>NVIDIA Container Toolkit</td>
+<td>latest</td>
+</tr>
+<tr>
+<td>Conda (Miniconda / Mambaforge)</td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<h3 id="install-nvidia-container-toolkit-if-not-installed">Install NVIDIA Container Toolkit (if not installed)<a class="headerlink" href="#install-nvidia-container-toolkit-if-not-installed" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://nvidia.github.io/libnvidia-container/gpgkey<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>sudo<span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>-L<span class="w"> </span>https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/nvidia-container-toolkit.list
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-container-toolkit
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>sudo<span class="w"> </span>nvidia-ctk<span class="w"> </span>runtime<span class="w"> </span>configure<span class="w"> </span>--runtime<span class="o">=</span>docker
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</span></code></pre></div>
+<hr />
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-set-up-the-host-conda-environment">Step 1 — Set up the HOST Conda environment<a class="headerlink" href="#step-1-set-up-the-host-conda-environment" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Create the conda environment (host-side only)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>unified_env.yml
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
+</span></code></pre></div>
+<h3 id="step-2-build-the-addverb-arms-c-pybind-module">Step 2 — Build the Addverb Arms C++ pybind module<a class="headerlink" href="#step-2-build-the-addverb-arms-c-pybind-module" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>addverb_arms/python_bindings/pybind
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cmake<span class="w"> </span>..
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Output: ../addverb_arms_interface.cpython-311-x86_64-linux-gnu.so</span>
+</span></code></pre></div>
+<blockquote>
+<p>Verify the build:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>../../..<span class="w">  </span><span class="c1"># back to python_bindings/</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>conda<span class="w"> </span>run<span class="w"> </span>-n<span class="w"> </span>unified_addverb_isaaclab<span class="w"> </span>python<span class="w"> </span>test_import.py
+</span></code></pre></div>
+Expected output: <strong>6 passed, 0 failed</strong></p>
+</blockquote>
+<h3 id="step-3-build-the-docker-image">Step 3 — Build the Docker image<a class="headerlink" href="#step-3-build-the-docker-image" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>docker/build_sim.sh<span class="w"> </span>docker/run_sim.sh
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>./docker/build_sim.sh
+</span></code></pre></div>
+<blockquote>
+<p>First build pulls ~20 GB from NVIDIA's registry. Subsequent builds are cached.</p>
+</blockquote>
+<hr />
+<h2 id="running-the-system">Running the System<a class="headerlink" href="#running-the-system" title="Permanent link">&para;</a></h2>
+<h3 id="quickest-path-single-config-launchers">Quickest path — single-config launchers<a class="headerlink" href="#quickest-path-single-config-launchers" title="Permanent link">&para;</a></h3>
+<p>Edit <code>launch_config.yaml</code> at the repo root once (<code>mode: mock|real</code>, image, task, repo_root, etc.), then:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Terminal A (host) — bridge</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>./scripts/launch_bridge.sh
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Terminal B — sim</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>./scripts/launch_sim.sh
+</span></code></pre></div>
+<p>Per-run overrides: <code>EPISODE_NUM=3 ./scripts/launch_sim.sh</code>, <code>MODE=real ./scripts/launch_bridge.sh</code>. See <code>scripts/launch_*.sh</code> for the full list of env-var knobs. The sections below describe the manual pipeline if you want to invoke the bridge and container directly.</p>
+<h4 id="calibration">Calibration<a class="headerlink" href="#calibration" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>./scripts/launch_calibration.sh<span class="w">                  </span><span class="c1"># all defaults from launch_config.yaml + bridge_config.yaml</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">INTERFACE</span><span class="o">=</span>can1<span class="w"> </span>./scripts/launch_calibration.sh<span class="w">   </span><span class="c1"># override CAN interface</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">MODEL</span><span class="o">=</span>ADD<span class="w">      </span>./scripts/launch_calibration.sh
+</span></code></pre></div>
+<p>The launcher runs the interactive arm + gripper calibration (joint home, gripper open, gripper closed, optional jaw separation in metres) and writes <code>addverb_isaaclab/config/calibration.yaml</code>. After the prompts the bridge falls into its publishing loop, so you can leave it running and start the sim straight away — press <code>E</code> or Ctrl+C if calibration was all you wanted.</p>
+<h3 id="terminal-a-host-start-the-bridge-sender">Terminal A — Host: Start the bridge sender<a class="headerlink" href="#terminal-a-host-start-the-bridge-sender" title="Permanent link">&para;</a></h3>
+<h4 id="without-hardware-mock-sine-wave-for-testing">Without hardware (mock sine wave for testing):<a class="headerlink" href="#without-hardware-mock-sine-wave-for-testing" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">cd</span><span class="w"> </span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>python<span class="w"> </span>addverb_isaaclab/bridge/mock_bridge_sender.py<span class="w"> </span>--sine
+</span></code></pre></div>
+<h4 id="with-real-hardware-can-bus">With real hardware (CAN bus):<a class="headerlink" href="#with-real-hardware-can-bus" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Ensure CAN interface is up first:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># sudo ip link set can0 up type can bitrate 1000000</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>python<span class="w"> </span>addverb_isaaclab/bridge/bridge_sender.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>--config<span class="w"> </span>addverb_isaaclab/config/bridge_config.yaml
+</span></code></pre></div>
+<h3 id="terminal-b-container-launch-isaac-sim">Terminal B — Container: Launch Isaac Sim<a class="headerlink" href="#terminal-b-container-launch-isaac-sim" title="Permanent link">&para;</a></h3>
+<p>The robot is loaded from a pre-converted USD bundle committed under
+<code>addverb_isaaclab/assets/usd/addverb_arm/addverb_gripper_urdf_2.usd</code> (mounted into the
+container read-write). No URDF→USD conversion happens at launch.
+<em>For more detail on the Isaac Lab side, see
+<a href="isaac-lab.html">Isaac Lab Notes</a>.</em></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">cd</span><span class="w"> </span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Basic teleop — no cameras, no recording</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-v0
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># With cameras</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># With exactly matched hardware-style Data Recording (Parquet + JPEGs)</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span>--repo_root<span class="w"> </span>/workspace/datasets/session_001<span class="w"> </span>--episode_num<span class="w"> </span><span class="m">0</span>
+</span></code></pre></div>
+<hr />
+<h2 id="validation-test-no-hardware-required">Validation Test (No Hardware Required)<a class="headerlink" href="#validation-test-no-hardware-required" title="Permanent link">&para;</a></h2>
+<p>Run this to confirm host ↔ container communication works end-to-end:</p>
+<h3 id="terminal-a-start-mock-bridge">Terminal A — start mock bridge<a class="headerlink" href="#terminal-a-start-mock-bridge" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>python<span class="w"> </span>addverb_isaaclab/bridge/mock_bridge_sender.py<span class="w"> </span>--sine
+</span></code></pre></div>
+<p>Expected output:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[mock_bridge_sender] Publishing on tcp://0.0.0.0:5556 at 200 Hz
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>[mock_bridge_sender] Mode: Sine wave mock motion
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>[      0] arm: [0. 0. 0. 0. 0. 0.]  gripper: 0.0000 rad
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>[   1000] arm: [0.048 0.048 ...]     gripper: 0.0480 rad
+</span></code></pre></div></p>
+<h3 id="terminal-b-launch-sim-container">Terminal B — launch sim container<a class="headerlink" href="#terminal-b-launch-sim-container" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-v0
+</span></code></pre></div>
+<p>Expected console output in the container:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>[addverb_agent] Task:        Addverb-Teleop-v0
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>[addverb_agent] Leader addr: tcp://localhost:5556
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>[ZMQLeaderReceiver] Subscribed to tcp://localhost:5556
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>[addverb_agent] Running. Close the Isaac Sim window or Ctrl+C to stop.
+</span></code></pre></div></p>
+<p>The Isaac Sim viewport will open and the robot arm will mirror the sine wave motion from the mock sender.</p>
+<hr />
+<h2 id="project-layout">Project Layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>General_Autonomy_Special_Robots/
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>├── unified_env.yml                  # HOST Conda environment (no Isaac Sim binaries)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>├── docker/
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>│   ├── Dockerfile                   # Isaac Lab sim container definition
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>│   ├── build_sim.sh                 # Build helper
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>│   └── run_sim.sh                   # Run helper (GPU + X11 + --network=host)
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>├── addverb_arms/                    # C++ arm driver (host only, NOT in container)
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>│   ├── CMakeLists.txt
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>│   ├── src/                         # C++ sources (control, kd, lower_level, etc.)
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>│   └── python_bindings/
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>│       ├── pybind/
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>│       │   ├── CMakeLists.txt       # Builds addverb_arms_interface.cpython-311.so
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>│       │   └── addverb_arms_pybind.cpp
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>│       └── test_import.py           # Sanity test for the pybind module
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>├── addverb_isaaclab/                # Pure-Python sim-side package (also copied into container)
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>│   ├── bridge/
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>│   │   ├── bridge_sender.py         # HOST: reads arm → ZMQ PUB
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>│   │   └── mock_bridge_sender.py    # HOST: mock arm → ZMQ PUB (no hardware)
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>│   ├── sim_agent/
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>│   │   ├── addverb_agent.py         # CONTAINER: ZMQ SUB → Isaac Lab
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>│   │   └── addverb_env_cfg.py       # Isaac Lab env configs
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>│   ├── utils/
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>│   │   ├── kinematic_mapper.py      # Joint space remapping (Addverb -&gt; Isaac Sim)
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>│   │   └── config_loader.py
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>│   ├── dataset/                     # Parquet/JPEG data logger (sim-side)
+</span><span id="__span-14-26"><a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>│   └── config/
+</span><span id="__span-14-27"><a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>│       ├── agent_config.yaml        # ZMQ addr, task, logging, kinematics
+</span><span id="__span-14-28"><a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>│       ├── bridge_config.yaml       # CAN interface, ZMQ port, loop Hz
+</span><span id="__span-14-29"><a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>│       └── isaac_scene_config.yaml  # Robot USD path, cameras, physics
+</span><span id="__span-14-30"><a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>└── lerobot_framework/               # LeRobot framework + reference task scaffolding (also in container)
+</span><span id="__span-14-31"><a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>    └── source/sim_to_real_so101/
+</span></code></pre></div>
+<hr />
+<h2 id="configuration-reference">Configuration Reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<h3 id="addverb_isaaclabconfigbridge_configyaml"><code>addverb_isaaclab/config/bridge_config.yaml</code><a class="headerlink" href="#addverb_isaaclabconfigbridge_configyaml" title="Permanent link">&para;</a></h3>
+<p>Controls the host-side bridge sender.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>robot.can_interface</code></td>
+<td><code>can0</code></td>
+<td>CAN bus device name</td>
+</tr>
+<tr>
+<td><code>robot.n_dof</code></td>
+<td><code>7</code></td>
+<td>Arm DOF (6 arm + 1 gripper)</td>
+</tr>
+<tr>
+<td><code>zmq.host</code></td>
+<td><code>0.0.0.0</code></td>
+<td>Bind address (all interfaces)</td>
+</tr>
+<tr>
+<td><code>zmq.port</code></td>
+<td><code>5556</code></td>
+<td>ZMQ PUB port</td>
+</tr>
+<tr>
+<td><code>control.loop_hz</code></td>
+<td><code>200</code></td>
+<td>Publishing rate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="addverb_isaaclabconfigagent_configyaml"><code>addverb_isaaclab/config/agent_config.yaml</code><a class="headerlink" href="#addverb_isaaclabconfigagent_configyaml" title="Permanent link">&para;</a></h3>
+<p>Controls the container-side Isaac Lab agent.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>env.task</code></td>
+<td><code>Addverb-Teleop-v0</code></td>
+<td>Gym environment ID</td>
+</tr>
+<tr>
+<td><code>env.device</code></td>
+<td><code>cuda:0</code></td>
+<td>Torch compute device</td>
+</tr>
+<tr>
+<td><code>zmq.leader_addr</code></td>
+<td><code>tcp://localhost:5556</code></td>
+<td>Bridge sender address</td>
+</tr>
+<tr>
+<td><code>logging.enabled</code></td>
+<td><code>false</code></td>
+<td>Dataset recording toggle</td>
+</tr>
+<tr>
+<td><code>logging.dataset_root</code></td>
+<td><code>/tmp/addverb_sim_dataset</code></td>
+<td>Dataset output path</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dependency-conflict-notes">Dependency Conflict Notes<a class="headerlink" href="#dependency-conflict-notes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Conflict</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>numpy 2.x</code> vs Isaac Sim <code>1.26.0</code></td>
+<td>Host env uses <code>&lt;2.0</code>; container base pins <code>1.26.0</code></td>
+</tr>
+<tr>
+<td><code>torch 2.5.x</code> (cu124) vs Isaac Sim <code>2.7.0</code></td>
+<td>Separate environments — no conflict</td>
+</tr>
+<tr>
+<td><code>opencv-python</code> vs headless envs</td>
+<td>Use conda <code>opencv</code> package (no Qt) on host; pip headless in container</td>
+</tr>
+<tr>
+<td><code>lerobot</code> datasets requirement</td>
+<td>Installed inside container only; host doesn't need it</td>
+</tr>
+<tr>
+<td><code>torchvision==0.20.1</code> vs lerobot <code>&gt;=0.21.0</code></td>
+<td>Relaxed to <code>&gt;=0.20.1</code> on host; container uses base image version</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="isaac-sim-window-doesnt-appear">Isaac Sim window doesn't appear<a class="headerlink" href="#isaac-sim-window-doesnt-appear" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>xhost<span class="w"> </span>+local:docker
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Re-run docker/run_sim.sh</span>
+</span></code></pre></div>
+<h3 id="zmq-agent-shows-joints-is-none-no-data-received">ZMQ: agent shows <code>joints is None</code> (no data received)<a class="headerlink" href="#zmq-agent-shows-joints-is-none-no-data-received" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Confirm bridge_sender is running on the host</li>
+<li>Confirm port 5556 is not blocked: <code>ss -tlnp | grep 5556</code></li>
+<li>With <code>--network=host</code>, <code>localhost</code> in the container == host machine ✓</li>
+</ol>
+<h3 id="docker-cant-access-gpu">Docker can't access GPU<a class="headerlink" href="#docker-cant-access-gpu" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>nvidia-smi<span class="w">  </span><span class="c1"># verify driver works</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span>nvidia/cuda:12.6.0-base-ubuntu22.04<span class="w"> </span>nvidia-smi
+</span></code></pre></div>
+<h3 id="launch_bridgesh-aborts-with-conda_build-unbound-variable"><code>launch_bridge.sh</code> aborts with <code>CONDA_BUILD: unbound variable</code><a class="headerlink" href="#launch_bridgesh-aborts-with-conda_build-unbound-variable" title="Permanent link">&para;</a></h3>
+<p>The conda activate.d hook <code>ros-noetic-catkin_activate.sh</code> references
+<code>$CONDA_BUILD</code>, <code>$target_platform</code>, <code>$build_platform</code> without defaults,
+and <code>set -u</code> in the launcher trips on them. The launcher already wraps
+the <code>conda activate</code> call with <code>set +u</code> / <code>set -u</code>; if you copy this
+script into a new project make sure that pair stays intact.</p>
+<h3 id="can-interface-not-found">CAN interface not found<a class="headerlink" href="#can-interface-not-found" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Bring up CAN interface</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>can0<span class="w"> </span>up<span class="w"> </span><span class="nb">type</span><span class="w"> </span>can<span class="w"> </span>bitrate<span class="w"> </span><span class="m">1000000</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Or use the provided setup script:</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>bash<span class="w"> </span>addverb_arms/setup_slcan.sh
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "navigation.expand", "navigation.instant", "navigation.instant.progress", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="javascripts/sw-register.js"></script>
+      
+        <script src="javascripts/mermaid-init.js"></script>
+      
+    
+  </body>
+</html>

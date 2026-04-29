@@ -1,0 +1,1682 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Operator's guide for the Addverb 6-DOF arm running as a teleoperation leader against an Isaac Lab sim follower with VLA-format dataset collection.
+">
+      
+      
+      
+      
+        <link rel="prev" href="real-hardware-data-collection.html">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/left-logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Sim-to-Real Training (DR, GR00T, Co-training) - Addverb Arm — Sim-to-Real Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sim-to-real-training-pipeline-dr-gr00t-co-training" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-header__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+      
+  <img src="assets/left-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Addverb Arm — Sim-to-Real Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sim-to-Real Training (DR, GR00T, Co-training)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="overview.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="architecture.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture & Setup
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="isaac-lab.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Isaac Lab Notes
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="data-collection.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Collection
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="real-hardware-data-collection.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Real-Hardware Data Collection
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="sim-to-real-training.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Sim-to-Real Training (DR, GR00T, Co-training)
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-nav__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+      
+  <img src="assets/left-logo.png" alt="logo">
+
+    </a>
+    Addverb Arm — Sim-to-Real Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="overview.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture & Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="isaac-lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Lab Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="data-collection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="real-hardware-data-collection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-Hardware Data Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sim-to-Real Training (DR, GR00T, Co-training)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="sim-to-real-training.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sim-to-Real Training (DR, GR00T, Co-training)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stage-1-domain-randomised-teleoperation-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1 — Domain-Randomised Teleoperation Dataset
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage 1 — Domain-Randomised Teleoperation Dataset">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-dr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why DR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-we-already-randomise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we already randomise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-ranges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended ranges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#episode-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Episode count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recording-with-the-data-collection-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recording with the data-collection container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-prompt-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task prompt strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset-format-produced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset format produced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-fine-tuning-gr00t-on-the-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 — Fine-tuning GR00T on the Dataset
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage 2 — Fine-tuning GR00T on the Dataset">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyper-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hyper-parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-3-sim-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 3 — Sim Evaluation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage 3 — Sim Evaluation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-a-policy-server-terminal-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a policy server (Terminal 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-eval-client-against-isaac-lab-terminal-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run the eval client against Isaac Lab (Terminal 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-success-looks-like" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What success looks like
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-4-real-hardware-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 4 — Real-Hardware Evaluation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage 4 — Real-Hardware Evaluation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#policy-server-terminal-1-gpu-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy server (Terminal 1, GPU host)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-arm-client-terminal-2-on-the-data-collection-pc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-arm client (Terminal 2, on the data-collection PC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-5-co-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 5 — Co-Training
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage 5 — Co-Training">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-mixing-ratio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended mixing ratio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset-merge-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset merge step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-stage-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-stage checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-file-path-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick file-path reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sim-to-real-training-pipeline-dr-gr00t-co-training">Sim-to-Real Training Pipeline (DR, GR00T, Co-training)<a class="headerlink" href="#sim-to-real-training-pipeline-dr-gr00t-co-training" title="Permanent link">&para;</a></h1>
+<p>End-to-end recipe for training a vision-language-action (VLA) policy on top
+of the Addverb teleoperation stack and deploying it back onto the physical
+arm. Targets <strong>our</strong> hardware (7-DoF Addverb arm — 6 revolute joints + 1
+prismatic gripper) and <strong>our</strong> dataset (3 USB cameras, LeRobot Parquet/JPEG
+via <code>addverb_vla_datacollection</code>).</p>
+<p>The recipe has five stages:</p>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    S1["&lt;b&gt;Stage 1&lt;/b&gt;&lt;br/&gt;Collect dataset&lt;br/&gt;(DR teleop)"]
+    S2["&lt;b&gt;Stage 2&lt;/b&gt;&lt;br/&gt;Fine-tune GR00T&lt;br/&gt;on the dataset"]
+    S3["&lt;b&gt;Stage 3&lt;/b&gt;&lt;br/&gt;Evaluate in sim&lt;br/&gt;(Isaac Lab env + DR)"]
+    S4["&lt;b&gt;Stage 4&lt;/b&gt;&lt;br/&gt;Evaluate on real&lt;br/&gt;hardware"]
+    S5["&lt;b&gt;Stage 5&lt;/b&gt;&lt;br/&gt;Co-training:&lt;br/&gt;mix few real + many sim demos"]
+
+    S1 --&gt; S2 --&gt; S3 --&gt; S4
+    S4 -- gap acceptable --&gt; SHIP([Ship policy])
+    S4 -- real-world gap is large --&gt; S5
+    S5 -- return to Stage 2 --&gt; S2
+
+    classDef capture fill:#FEF3C7,stroke:#B45309,color:#78350F;
+    classDef train   fill:#DBEAFE,stroke:#1D4ED8,color:#1E3A8A;
+    classDef eval    fill:#DCFCE7,stroke:#15803D,color:#14532D;
+    classDef cotrain fill:#FCE7F3,stroke:#BE185D,color:#831843;
+    classDef ship    fill:#E5E7EB,stroke:#6B7280,color:#111827;
+    class S1 capture
+    class S2 train
+    class S3,S4 eval
+    class S5 cotrain
+    class SHIP ship</code></pre>
+<p>The choice between <strong>DR-only</strong> (Stages 1–4) and <strong>co-training</strong> (adds
+Stage 5) is empirical: try DR-only first; only fall through to co-training
+if real-world success rate is unacceptable.</p>
+<hr />
+<h2 id="stage-1-domain-randomised-teleoperation-dataset">Stage 1 — Domain-Randomised Teleoperation Dataset<a class="headerlink" href="#stage-1-domain-randomised-teleoperation-dataset" title="Permanent link">&para;</a></h2>
+<h3 id="why-dr">Why DR<a class="headerlink" href="#why-dr" title="Permanent link">&para;</a></h3>
+<p>Real cameras drift, lighting changes, mounts vibrate. A policy trained on
+a single, perfectly-lit sim scene will overfit to those exact conditions
+and fail on real hardware. We randomise the sim scene at every reset so
+the policy can never lean on visual constants — it has to learn the
+<em>task</em>, not the <em>backdrop</em>.</p>
+<h3 id="what-we-already-randomise">What we already randomise<a class="headerlink" href="#what-we-already-randomise" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    CFG[("isaac_scene_config.yaml&lt;br/&gt;→ domain_randomization:")]
+    EVT["addverb_env_cfg.py&lt;br/&gt;EventTermCfg → on reset"]
+    HLP["sim_agent/mdp/resets.py&lt;br/&gt;helper functions"]
+
+    CFG --&gt; EVT --&gt; HLP
+    HLP --&gt; H1["randomize_camera_focal_length&lt;br/&gt;(camera_ego)"]
+    HLP --&gt; H2["randomize_camera_pose&lt;br/&gt;(camera_external)"]
+    HLP --&gt; H3["randomize_light_exposure"]
+    HLP --&gt; H4["random_asset_pose&lt;br/&gt;(cube spawn)"]
+
+    H1 --&gt; SCENE[(Isaac Lab scene)]
+    H2 --&gt; SCENE
+    H3 --&gt; SCENE
+    H4 --&gt; SCENE</code></pre>
+<p>The Addverb env already wires DR into <code>addverb_isaaclab/sim_agent/mdp/resets.py</code>
+via three event terms in <code>addverb_env_cfg.py</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Purpose</th>
+<th>Range source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>randomize_camera_focal_length</code></td>
+<td>Perturb FOV of a camera sensor</td>
+<td><code>domain_randomization.camera_ego_focal_length_range</code></td>
+</tr>
+<tr>
+<td><code>randomize_camera_pose</code></td>
+<td>Perturb camera position / orientation</td>
+<td><code>domain_randomization.camera_external_pos_range</code> + <code>…_rot_range</code></td>
+</tr>
+<tr>
+<td><code>randomize_light_exposure</code></td>
+<td>Vary scene brightness</td>
+<td><code>domain_randomization.light_exposure_range</code></td>
+</tr>
+<tr>
+<td><code>random_asset_pose</code></td>
+<td>Randomise cube/asset pose</td>
+<td><code>cube.spawn_range</code> + per-axis rot range</td>
+</tr>
+</tbody>
+</table>
+<p>The current ranges in <code>addverb_isaaclab/config/isaac_scene_config.yaml</code>
+(<code>domain_randomization:</code> block) are:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">light_exposure_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-3.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">]</span><span class="w">              </span><span class="c1"># EV</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">mat_yaw_range</span><span class="p">:</span><span class="w">        </span><span class="p p-Indicator">[</span><span class="nv">-0.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.1</span><span class="p p-Indicator">]</span><span class="w">              </span><span class="c1"># rad, workspace mat rotation</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">camera_ego_focal_length_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">15.0</span><span class="p p-Indicator">]</span><span class="w">    </span><span class="c1"># mm  (±10 % around 13.5)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">camera_external_pos_range</span><span class="p">:</span><span class="w">                     </span><span class="c1"># m, per-axis</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.01</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">camera_external_rot_range</span><span class="p">:</span><span class="w">                     </span><span class="c1"># rad, per-axis</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">roll</span><span class="p">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">yaw</span><span class="p">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+<h3 id="recommended-ranges">Recommended ranges<a class="headerlink" href="#recommended-ranges" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Recommended range</th>
+<th>Status in our config</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Light exposure</td>
+<td><code>(-4.0, 3.0)</code></td>
+<td>We use <code>(-3.0, 1.0)</code> (slightly narrower — widen if real lighting varies more)</td>
+</tr>
+<tr>
+<td>Light colour temp.</td>
+<td><code>(2500.0, 9500.0)</code> K</td>
+<td><strong>Not yet wired</strong> — add a <code>randomize_light_colour_temp</code> helper if HDRI lighting drifts in your real scene</td>
+</tr>
+<tr>
+<td>HDRI texture</td>
+<td>procedurally selected from available <code>.exr</code> files</td>
+<td><strong>Not yet wired</strong> — irrelevant if our real workspace is fixed</td>
+</tr>
+<tr>
+<td>Camera position X / Y</td>
+<td><code>(-0.02, 0.02)</code> m</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Camera position Z</td>
+<td><code>(-0.01, 0.01)</code> m</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Roll / pitch</td>
+<td><code>(-0.05, 0.05)</code> rad</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Yaw</td>
+<td><code>(-0.1, 0.1)</code> rad</td>
+<td>We use <code>(-0.05, 0.05)</code> — widen if external camera mount is hand-tightened in real</td>
+</tr>
+<tr>
+<td>Object pose</td>
+<td>randomised per reset</td>
+<td>Yes — <code>reset_cube_position</code> event term</td>
+</tr>
+</tbody>
+</table>
+<p>Physics randomisation categories (object mass, friction, restitution,
+joint damping, actuator delays, sensor noise) have <strong>no fixed numeric
+ranges</strong>; treat that as an open knob if your real arm's torque profile
+diverges from the URDF.</p>
+<h3 id="episode-count">Episode count<a class="headerlink" href="#episode-count" title="Permanent link">&para;</a></h3>
+<p>Plan for <strong>70–150 successful takes per task prompt</strong>. Below 50 the policy
+underfits; beyond 200 the marginal returns flatten.</p>
+<h3 id="recording-with-the-data-collection-container">Recording with the data-collection container<a class="headerlink" href="#recording-with-the-data-collection-container" title="Permanent link">&para;</a></h3>
+<p>For the <strong>real-hardware single-arm</strong> path the workflow is the
+<code>run_datacollect_docker.sh</code> loop documented in
+<a href="real-hardware-data-collection.html"><code>Real-Hardware Data Collection</code></a>.
+For the <strong>sim teleop</strong> path you publish leader joint frames over ZMQ
+(<code>addverb_isaaclab/bridge/bridge_sender.py</code>) and the in-container
+agent (<code>addverb_agent.py</code>) writes the episode.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Real-hardware (this repo)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start episode</td>
+<td><code>ENTER</code> at the master-script prompt</td>
+</tr>
+<tr>
+<td>Stop episode</td>
+<td>press <code>e</code> (or <code>Ctrl+C</code>)</td>
+</tr>
+<tr>
+<td>Cancel mid-take</td>
+<td>press <code>q</code> at the next prompt + <code>n</code> to discard</td>
+</tr>
+<tr>
+<td>Reset arm only</td>
+<td><code>r</code> at the master-script prompt</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-prompt-strings">Task prompt strings<a class="headerlink" href="#task-prompt-strings" title="Permanent link">&para;</a></h3>
+<p>Pin one English sentence per task and store it as <code>task_prompt</code> — see
+<code>EPISODE_TASK_RANGES</code> in <code>config_single.py</code> (or <code>config.py</code> for the
+dual-arm setup). Update the <code>task_prompt</code> string before recording so the
+parquet <code>task_index</code> column points at the right description. The default
+is a single-arm pick-and-place:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&quot;Use the leader arm to teleoperate the follower arm and complete the
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> manipulation task.&quot;
+</span></code></pre></div>
+<p>Replace this with the actual task before each recording session — GR00T
+conditions on it at inference time.</p>
+<h3 id="dataset-format-produced">Dataset format produced<a class="headerlink" href="#dataset-format-produced" title="Permanent link">&para;</a></h3>
+<p>Per frame, written into the LeRobot v2 layout described in
+<a href="real-hardware-data-collection.html#1-what-gets-recorded"><code>Real-Hardware Data Collection</code></a>:</p>
+<ul>
+<li><code>observation.state.joint_positions</code> — float32 <code>[7]</code>  (6 arm joints + gripper)</li>
+<li><code>action.robot</code>                      — float32 <code>[7]</code>  (leader joints + gripper)</li>
+<li><code>observation.images.camera1_images</code> — JPEG (top)</li>
+<li><code>observation.images.camera2_images</code> — JPEG (left)</li>
+<li><code>observation.images.camera3_images</code> — JPEG (right)</li>
+<li><code>task_index</code>, <code>episode_index</code>, <code>frame_index</code>, <code>timestamp</code></li>
+</ul>
+<p>Our three camera keys (<code>camera1_images</code>, <code>camera2_images</code>, <code>camera3_images</code>)
+need a rename map at training time to whatever canonical names the trainer
+expects (e.g. <code>top</code> / <code>left</code> / <code>right</code>) — see Stage 2.</p>
+<blockquote>
+<p><strong>Camera framing.</strong> Default is <code>320×320</code> (square). If you change
+<code>LOG_WIDTH/LOG_HEIGHT</code> in <code>config_single.py</code>, keep the aspect ratio
+sensible.</p>
+</blockquote>
+<hr />
+<h2 id="stage-2-fine-tuning-gr00t-on-the-dataset">Stage 2 — Fine-tuning GR00T on the Dataset<a class="headerlink" href="#stage-2-fine-tuning-gr00t-on-the-dataset" title="Permanent link">&para;</a></h2>
+<h3 id="base-model">Base model<a class="headerlink" href="#base-model" title="Permanent link">&para;</a></h3>
+<p><strong><code>nvidia/GR00T-N1.6-3B</code></strong> is the base checkpoint.</p>
+<h3 id="training-command">Training command<a class="headerlink" href="#training-command" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>python<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>gr00t/experiment/launch_finetune.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--base_model_path<span class="w"> </span>nvidia/GR00T-N1.6-3B<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--dataset_path<span class="w"> </span><span class="nv">$DATASET_PATH</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--modality_config_path<span class="w"> </span>examples/AddverbArm/addverb_config.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--embodiment_tag<span class="w"> </span>NEW_EMBODIMENT<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--num_gpus<span class="w"> </span><span class="nv">$NUM_GPUS</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--output_dir<span class="w"> </span>/tmp/addverb_finetune<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--save_steps<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--save_total_limit<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--max_steps<span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--warmup_ratio<span class="w"> </span><span class="m">0</span>.05<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>--weight_decay<span class="w"> </span>1e-5<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--learning_rate<span class="w"> </span>1e-4<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>--use_wandb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>--global_batch_size<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--color_jitter_params<span class="w"> </span>brightness<span class="w"> </span><span class="m">0</span>.3<span class="w"> </span>contrast<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>saturation<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>hue<span class="w"> </span><span class="m">0</span>.08<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span>--dataloader_num_workers<span class="w"> </span><span class="m">4</span>
+</span></code></pre></div>
+<h3 id="hyper-parameters">Hyper-parameters<a class="headerlink" href="#hyper-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learning rate</td>
+<td><code>1e-4</code></td>
+</tr>
+<tr>
+<td>Global batch size</td>
+<td><code>32</code></td>
+</tr>
+<tr>
+<td>Max training steps</td>
+<td><code>10 000</code></td>
+</tr>
+<tr>
+<td>Warmup ratio</td>
+<td><code>0.05</code></td>
+</tr>
+<tr>
+<td>Weight decay</td>
+<td><code>1e-5</code></td>
+</tr>
+<tr>
+<td>Action horizon</td>
+<td><code>16</code></td>
+</tr>
+<tr>
+<td>Save every</td>
+<td>1 000 steps</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU</td>
+<td><strong>24 GB+ VRAM</strong></td>
+</tr>
+<tr>
+<td>Training time</td>
+<td><strong>2–8 h</strong> (dataset-dependent)</td>
+</tr>
+<tr>
+<td>Inference target</td>
+<td>RTX 3080+ (real-time)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements">Data requirements<a class="headerlink" href="#data-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>50–200 demonstrations per task for basic competence</strong>, with language
+annotations and varied conditions.</p>
+<h3 id="required-configuration">Required configuration<a class="headerlink" href="#required-configuration" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Dataset path.</strong> Point <code>--dataset_path</code> at the LeRobot root produced
+   by Stage 1:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DATASET_PATH</span><span class="o">=</span>/home/vla-training/isaac_vla/General_Autonomy_Special_Robots/<span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>addverb_arms/addverb_vla_datacollection/addverb_single_arm_dataset
+</span></code></pre></div>
+<ol>
+<li>
+<p><strong>Modality config.</strong> Author <code>examples/AddverbArm/addverb_config.py</code>
+   describing:</p>
+</li>
+<li>
+<p>Joint count → <strong>7</strong> (6 revolute + 1 prismatic gripper).</p>
+</li>
+<li>
+<p>Camera-name mapping that our parquet produces:
+     <code>camera1_images, camera2_images, camera3_images</code>. Pick canonical
+     names GR00T expects (e.g. <code>top</code>, <code>left</code>, <code>right</code>) and apply the
+     rename via the config or via <code>--rename_map</code> at train time.</p>
+</li>
+<li>
+<p><strong>Embodiment tag.</strong> <code>--embodiment_tag NEW_EMBODIMENT</code> is fine for a
+   first run — GR00T will treat the Addverb arm as an unseen embodiment
+   and fine-tune accordingly. Once you have a stable checkpoint, give
+   it a stable tag (e.g. <code>ADDVERB_7DOF</code>) so co-trained datasets line up.</p>
+</li>
+</ol>
+<hr />
+<h2 id="stage-3-sim-evaluation">Stage 3 — Sim Evaluation<a class="headerlink" href="#stage-3-sim-evaluation" title="Permanent link">&para;</a></h2>
+<p>Once a checkpoint exists, validate it inside the same Isaac Lab env it
+was trained against, with <strong>the same DR turned on</strong>, before risking the
+real arm.</p>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    CKPT[("GR00T checkpoint&lt;br/&gt;checkpoint-10000")]
+    SRV["run_gr00t_server.py&lt;br/&gt;(Terminal 1)&lt;br/&gt;localhost:5555"]
+    CLI["lerobot_eval&lt;br/&gt;(Terminal 2)&lt;br/&gt;--task Addverb-Teleop-Cam-v0-Eval&lt;br/&gt;--action_horizon 16&lt;br/&gt;--lang_instruction ..."]
+    ENV["Isaac Lab env&lt;br/&gt;(same DR ranges as training)"]
+    METRIC["Success rate&lt;br/&gt;over ≥ 30 rollouts&lt;br/&gt;target: 50–70 %"]
+
+    CKPT --&gt; SRV
+    CLI &lt;--&gt;|policy queries / actions| SRV
+    CLI --&gt; ENV
+    ENV --&gt; METRIC</code></pre>
+<h3 id="run-a-policy-server-terminal-1">Run a policy server (Terminal 1)<a class="headerlink" href="#run-a-policy-server-terminal-1" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>&lt;your-hf-user&gt;/grootn16-finetune_addverb_pickup/checkpoint-10000
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>Isaac-GR00T/gr00t/eval/run_gr00t_server.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--model-path<span class="w"> </span>/workspace/models/<span class="nv">$MODEL</span>
+</span></code></pre></div>
+<p>Server listens on <code>localhost:5555</code> by default.</p>
+<h3 id="run-the-eval-client-against-isaac-lab-terminal-2">Run the eval client against Isaac Lab (Terminal 2)<a class="headerlink" href="#run-the-eval-client-against-isaac-lab-terminal-2" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>work in progress</strong></p>
+</blockquote>
+<h3 id="what-success-looks-like">What success looks like<a class="headerlink" href="#what-success-looks-like" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>work in progress</strong></p>
+</blockquote>
+<hr />
+<h2 id="stage-4-real-hardware-evaluation">Stage 4 — Real-Hardware Evaluation<a class="headerlink" href="#stage-4-real-hardware-evaluation" title="Permanent link">&para;</a></h2>
+<p>If sim eval looks good, run the policy on the physical Addverb arm.</p>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    SRV["run_gr00t_server.py&lt;br/&gt;(GPU host)&lt;br/&gt;localhost:5555"]
+    CLI["addverb_eval.py&lt;br/&gt;(data-collection PC)"]
+    ARM["Addverb follower (CAN)&lt;br/&gt;via AddverbArmsJointController"]
+    CAMS["3× USB cams&lt;br/&gt;top / left / right&lt;br/&gt;640×480 @ 30 fps"]
+    SAFE["Safety: workspace box · e-stop · auto-home on shutdown"]
+    LOG["Human-scored rollouts&lt;br/&gt;success / fail / safety_intervention&lt;br/&gt;≥ 20–30 rollouts per task"]
+
+    CLI &lt;--&gt;|policy queries / actions| SRV
+    CAMS --&gt; CLI
+    CLI --&gt; ARM
+    SAFE -.-&gt; CLI
+    CLI --&gt; LOG</code></pre>
+<h3 id="policy-server-terminal-1-gpu-host">Policy server (Terminal 1, GPU host)<a class="headerlink" href="#policy-server-terminal-1-gpu-host" title="Permanent link">&para;</a></h3>
+<p>Same command as Stage 3:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>Isaac-GR00T/gr00t/eval/run_gr00t_server.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>--model-path<span class="w"> </span>/workspace/models/<span class="nv">$MODEL</span>
+</span></code></pre></div>
+<h3 id="real-arm-client-terminal-2-on-the-data-collection-pc">Real-arm client (Terminal 2, on the data-collection PC)<a class="headerlink" href="#real-arm-client-terminal-2-on-the-data-collection-pc" title="Permanent link">&para;</a></h3>
+<p>Author <code>addverb_eval.py</code> under
+<code>Isaac-GR00T/gr00t/eval/real_robot/Addverb/</code>. Concretely it must:</p>
+<ol>
+<li>Drive the follower over its CAN interface (reuse the
+   <code>AddverbArmsJointController</code> Python binding from
+   <code>addverb_arms/python_bindings/pybind/</code>).</li>
+<li>Open three OpenCV cameras using the V4L2 paths from
+   <code>camera_config.json</code>, capturing at <strong>640×480 @ 30 fps</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">cameras</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">&quot;top&quot;</span><span class="p">:</span>   <span class="p">{</span><span class="s2">&quot;index_or_path&quot;</span><span class="p">:</span> <span class="n">cam1_path</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;left&quot;</span><span class="p">:</span>  <span class="p">{</span><span class="s2">&quot;index_or_path&quot;</span><span class="p">:</span> <span class="n">cam2_path</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;index_or_path&quot;</span><span class="p">:</span> <span class="n">cam3_path</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
+</span></code></pre></div></li>
+<li>Connect to the GR00T server at <code>--policy_host localhost --policy_port 5555</code>.</li>
+<li>Pass <code>--lang_instruction</code> matching the trained prompt.</li>
+<li>Stream actions back to the arm at the same Hz the dataset was logged
+   at (we use <strong>30 Hz logging</strong>, while the underlying control loop runs
+   at <code>CONTROL_LOOP_RATE_HZ = 200 Hz</code>; GR00T's <code>action_horizon=16</code>
+   chunk gives a smooth interpolation buffer).</li>
+</ol>
+<h3 id="success-metrics">Success metrics<a class="headerlink" href="#success-metrics" title="Permanent link">&para;</a></h3>
+<p>There is <strong>no automated success scorer</strong> in the eval pipeline. Plan to:</p>
+<ul>
+<li>Run <strong>at least 20–30 rollouts per task</strong> so you can quote success
+  rate with a useful confidence interval.</li>
+<li>Have a human note <code>success / failure / safety_intervention</code> on each
+  rollout in a CSV.</li>
+</ul>
+<h3 id="safety">Safety<a class="headerlink" href="#safety" title="Permanent link">&para;</a></h3>
+<p>The bridge already homes both arms on graceful shutdown (see
+<code>_shutdown_sequence()</code> in
+<code>addverb_arms/addverb_vla_datacollection/data-collect.py</code>). Reuse the
+same logic in <code>addverb_eval.py</code>. Add explicitly:</p>
+<ul>
+<li>A workspace box check that rejects any commanded pose outside the
+  table volume.</li>
+<li>A physical e-stop wired to the leader controller.</li>
+</ul>
+<hr />
+<h2 id="stage-5-co-training">Stage 5 — Co-Training<a class="headerlink" href="#stage-5-co-training" title="Permanent link">&para;</a></h2>
+<p>When real-only fine-tuning is unaffordable (we cannot collect 200 real
+demos per task) and sim-only DR has a residual sim-to-real gap, mix the
+two corpora.</p>
+<h3 id="the-principle">The principle<a class="headerlink" href="#the-principle" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Quantity</th>
+<th>Quality</th>
+<th>Reality match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simulation</td>
+<td>Abundant</td>
+<td>Consistent</td>
+<td>Approximate</td>
+</tr>
+<tr>
+<td>Real teleop</td>
+<td>Limited</td>
+<td>Variable</td>
+<td>Exact</td>
+</tr>
+</tbody>
+</table>
+<p>Each source plugs the other's hole.</p>
+<h3 id="recommended-mixing-ratio">Recommended mixing ratio<a class="headerlink" href="#recommended-mixing-ratio" title="Permanent link">&para;</a></h3>
+<p>Roughly <strong>14 : 1 to 20 : 1 sim : real</strong> — a small set of real takes
+(≈5 episodes) paired with a much larger sim set (70–100). Concretely,
+for our Addverb pick-and-place:</p>
+<ul>
+<li>Real: collect <strong>5–10</strong> good takes via
+  <code>run_datacollect_docker.sh</code> (Stage 1, real path).</li>
+<li>Sim: collect <strong>70–100</strong> takes with full DR via
+  <code>addverb_agent.py</code> (Stage 1, sim path with DR turned on).</li>
+</ul>
+<p>Apply the same DR ranges from §Stage 1 to the sim half — that is the
+whole point.</p>
+<h3 id="dataset-merge-step">Dataset merge step<a class="headerlink" href="#dataset-merge-step" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    REAL[("addverb_real_dataset/&lt;br/&gt;5–10 takes, exact reality")]
+    SIM[("addverb_sim_dataset/&lt;br/&gt;70–100 takes, full DR")]
+    MERGE["Concatenate at parquet level&lt;br/&gt;re-number episode_index&lt;br/&gt;real first · sim second"]
+    COT[("addverb_cotrain_dataset/&lt;br/&gt;14:1 → 20:1 sim:real")]
+    TRAIN["Stage 2 GR00T command&lt;br/&gt;--dataset_path addverb_cotrain_dataset/"]
+
+    REAL --&gt; MERGE
+    SIM --&gt; MERGE
+    MERGE --&gt; COT --&gt; TRAIN
+
+    classDef real fill:#FCE7F3,stroke:#BE185D,color:#831843;
+    classDef sim  fill:#DBEAFE,stroke:#1D4ED8,color:#1E3A8A;
+    classDef cot  fill:#DCFCE7,stroke:#15803D,color:#14532D;
+    class REAL real
+    class SIM sim
+    class COT cot</code></pre>
+<p>The default approach for Addverb:</p>
+<ol>
+<li>Produce two LeRobot dataset roots:</li>
+<li><code>addverb_real_dataset/</code> (Stage 1 real path)</li>
+<li><code>addverb_sim_dataset/</code>  (Stage 1 sim path, full DR)</li>
+<li>Concatenate at the parquet level into a third root
+   <code>addverb_cotrain_dataset/</code> with <code>episode_index</code> re-numbered so that
+   the real episodes appear first (operator can spot-check them
+   easily) and sim episodes second.</li>
+<li>Train with the same Stage 2 GR00T command, pointing
+   <code>--dataset_path</code> at <code>addverb_cotrain_dataset/</code>.</li>
+</ol>
+<hr />
+<h2 id="cross-stage-checklist">Cross-stage checklist<a class="headerlink" href="#cross-stage-checklist" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    G1{"Stage 1 gate&lt;br/&gt;≥ 70 demos / task?"}
+    G2{"Stage 2 gate&lt;br/&gt;loss flattens&lt;br/&gt;before 10 000 steps?"}
+    G3{"Stage 3 gate&lt;br/&gt;≥ 50 % sim success&lt;br/&gt;over ≥ 30 rollouts?"}
+    G4{"Stage 4 gate&lt;br/&gt;real success&lt;br/&gt;acceptable?"}
+    SHIP([Ship])
+    CT(["Stage 5 — Co-train&lt;br/&gt;(loop back to Stage 2)"])
+
+    G1 --&gt;|yes| G2
+    G1 --&gt;|no — collect more| G1
+    G2 --&gt;|yes| G3
+    G2 --&gt;|no — adjust DR / hyperparams| G1
+    G3 --&gt;|yes| G4
+    G3 --&gt;|no — widen DR / more demos| G1
+    G4 --&gt;|yes| SHIP
+    G4 --&gt;|no| CT
+    CT --&gt; G2
+
+    classDef gate fill:#FEF3C7,stroke:#B45309,color:#78350F;
+    class G1,G2,G3,G4 gate</code></pre>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Output</th>
+<th>Gate to next stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>LeRobot parquet + JPEG dataset(s) on disk</td>
+<td>≥ 70 successful demos per task</td>
+</tr>
+<tr>
+<td>2</td>
+<td>GR00T checkpoint at <code>/workspace/models/$MODEL</code></td>
+<td>Loss curve flattens before <code>max_steps=10 000</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sim-eval success rate</td>
+<td>≥ 50 % on the same DR ranges as training</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Real-eval success log</td>
+<td>If acceptable, ship; else go to Stage 5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Co-trained dataset + new GR00T checkpoint</td>
+<td>Loop back to Stage 3 / 4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quick-file-path-reference">Quick file-path reference<a class="headerlink" href="#quick-file-path-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File / dir</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addverb_isaaclab/config/isaac_scene_config.yaml</code></td>
+<td>DR ranges, scene, cuboid, cameras</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/sim_agent/addverb_env_cfg.py</code></td>
+<td>Wires DR helpers to event terms</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/sim_agent/mdp/resets.py</code></td>
+<td>Implementation of DR helpers</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/sim_agent/mdp/terms.py</code></td>
+<td><code>cube_lifted</code> / <code>cube_lifted_termination</code></td>
+</tr>
+<tr>
+<td><code>addverb_arms/addverb_vla_datacollection/config_single.py</code></td>
+<td>Single-arm dataset config (camera names, joint dim, task prompts)</td>
+</tr>
+<tr>
+<td><code>addverb_arms/addverb_vla_datacollection/run_datacollect_docker.sh</code></td>
+<td>Real-hardware dataset capture in container</td>
+</tr>
+<tr>
+<td>(to author) <code>examples/AddverbArm/addverb_config.py</code></td>
+<td>GR00T modality config: 7-DoF + 3 cameras</td>
+</tr>
+<tr>
+<td>(to author) <code>Isaac-GR00T/gr00t/eval/real_robot/Addverb/addverb_eval.py</code></td>
+<td>Real-arm policy client</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "navigation.expand", "navigation.instant", "navigation.instant.progress", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="javascripts/sw-register.js"></script>
+      
+        <script src="javascripts/mermaid-init.js"></script>
+      
+    
+  </body>
+</html>

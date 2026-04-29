@@ -1,0 +1,1347 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Operator's guide for the Addverb 6-DOF arm running as a teleoperation leader against an Isaac Lab sim follower with VLA-format dataset collection.
+">
+      
+      
+      
+      
+        <link rel="prev" href="isaac-lab.html">
+      
+      
+        <link rel="next" href="real-hardware-data-collection.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/left-logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Data Collection - Addverb Arm — Sim-to-Real Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-collection-addverb-isaac-sim" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-header__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+      
+  <img src="assets/left-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Addverb Arm — Sim-to-Real Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data Collection
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="overview.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="architecture.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture & Setup
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="isaac-lab.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Isaac Lab Notes
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="data-collection.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Collection
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="real-hardware-data-collection.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Real-Hardware Data Collection
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="sim-to-real-training.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Sim-to-Real Training (DR, GR00T, Co-training)
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-nav__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+      
+  <img src="assets/left-logo.png" alt="logo">
+
+    </a>
+    Addverb Arm — Sim-to-Real Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="overview.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture & Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="isaac-lab.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isaac Lab Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Collection
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="data-collection.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-gets-recorded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What gets recorded
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-3-terminal-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 3-terminal flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites-one-time-per-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites (one-time per machine)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites-one-time-per-physical-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites (one-time per physical setup)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-session-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-session workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Per-session workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-edit-launch_configyaml-one-line-per-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Edit launch_config.yaml (one-line per session)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-start-the-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Start the bridge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-the-sim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Start the sim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-move-the-leader-capture-end-the-episode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Move the leader, capture, end the episode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-multi-episode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Multi-episode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gripper-kinematics-slider-crank" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gripper kinematics (slider-crank)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mock-mode-no-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock mode (no hardware)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-machine-bridge-on-a-different-pc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-machine (bridge on a different PC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="real-hardware-data-collection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-Hardware Data Collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sim-to-real-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sim-to-Real Training (DR, GR00T, Co-training)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="data-collection-addverb-isaac-sim">Data Collection — Addverb → Isaac Sim<a class="headerlink" href="#data-collection-addverb-isaac-sim" title="Permanent link">&para;</a></h1>
+<p>End-to-end recipe for capturing teleoperation episodes (hardware leader →
+Isaac Sim follower) into the canonical Parquet + JPEG dataset format used
+by <code>addverb_vla_datacollection</code>. Everything below assumes the repo root
+<code>General_Autonomy_Special_Robots/</code>.</p>
+<video controls autoplay loop muted playsinline width="100%" preload="auto"
+       onloadedmetadata="this.playbackRate=2.0" onplay="this.playbackRate=2.0">
+  <source src="assets/videos/isaac_datacollection_video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<p><em>Above: hardware leader back-driven by hand, Isaac Sim follower mirroring
+in real time while <code>SimDataLogger</code> writes Parquet rows + JPEGs to disk.</em></p>
+<hr />
+<h2 id="what-gets-recorded">What gets recorded<a class="headerlink" href="#what-gets-recorded" title="Permanent link">&para;</a></h2>
+<p>Per frame, written at <code>dataset_config.yaml → logging.rate_hz</code> (30 Hz by
+default), in <code>addverb_vla_datacollection</code>-compatible Parquet + JPEG:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Shape</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>observation.state.joint_positions</code></td>
+<td>float32</td>
+<td><code>(7,)</code></td>
+<td>Sim joint state — <code>link_1..link_6</code>, <code>slide_1</code> (slide_2 mirrors slide_1, intentionally not logged)</td>
+</tr>
+<tr>
+<td><code>action.robot</code></td>
+<td>float32</td>
+<td><code>(7,)</code></td>
+<td>Commanded joint targets (same order)</td>
+</tr>
+<tr>
+<td><code>state.base</code> / <code>action.base</code></td>
+<td>float32</td>
+<td><code>(2,)</code></td>
+<td>Zeros (no mobile base)</td>
+</tr>
+<tr>
+<td><code>base.timestamp_us</code></td>
+<td>int64</td>
+<td><code>(1,)</code></td>
+<td>Leader hardware timestamp (microseconds)</td>
+</tr>
+<tr>
+<td><code>observation.images.ego</code></td>
+<td>JPEG path</td>
+<td></td>
+<td>Wrist-mounted RGB</td>
+</tr>
+<tr>
+<td><code>observation.images.external</code></td>
+<td>JPEG path</td>
+<td></td>
+<td>Fixed isometric workspace RGB</td>
+</tr>
+</tbody>
+</table>
+<p>Image size and JPEG quality come from <code>dataset_config.yaml → images</code>
+(default 320×320, q=95).</p>
+<hr />
+<h2 id="the-3-terminal-flow">The 3-terminal flow<a class="headerlink" href="#the-3-terminal-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    subgraph T1["Terminal 1 (HOST)&lt;br/&gt;real or mock leader"]
+        L1["$ ./scripts/launch_bridge.sh"]
+        L1 --&gt; P1["ZMQ PUB tcp://0.0.0.0:5556&lt;br/&gt;200 Hz joint frames"]
+    end
+
+    subgraph T2["Terminal 2 (HOST → docker)&lt;br/&gt;Isaac Sim"]
+        L2["$ ./scripts/launch_sim.sh"]
+        L2 --&gt; S1["ZMQ SUB tcp://localhost:5556"]
+        S1 --&gt; W["30 Hz Parquet + JPEG → repo_root"]
+    end
+
+    YAML[("launch_config.yaml&lt;br/&gt;(single source of truth)")]
+    YAML -.-&gt; L1
+    YAML -.-&gt; L2
+    P1 ==&gt; S1
+
+    style T1 fill:#EFF6FF,stroke:#1D4ED8,color:#1E3A8A
+    style T2 fill:#ECFDF5,stroke:#047857,color:#064E3B</code></pre>
+<p><code>scripts/launch_*.sh</code> reads the single <code>launch_config.yaml</code> so you change
+mode (<code>mock</code> ↔ <code>real</code>) / task / output dir / episode number in one place.</p>
+<hr />
+<h2 id="prerequisites-one-time-per-machine">Prerequisites (one-time per machine)<a class="headerlink" href="#prerequisites-one-time-per-machine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Docker image built</strong> (sim PC):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./docker/build_sim.sh<span class="w">              </span><span class="c1"># produces addverb-isaaclab:latest</span>
+</span></code></pre></div></li>
+<li><strong>Conda env on host</strong> (hardware PC + sim PC alike):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml<span class="w">      </span><span class="c1"># or pip-install addverb_isaaclab/requirements.txt</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
+</span></code></pre></div></li>
+<li><strong>Robot USD bundle</strong> is at
+   <code>addverb_isaaclab/assets/usd/addverb_arm/addverb_gripper_urdf_2.usd</code>
+   (already in repo). <code>scripts/launch_sim.sh</code> aborts early if missing.</li>
+<li><strong>CAN bus up</strong> (real-mode only):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./addverb_arms/setup_all_cans.sh
+</span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="prerequisites-one-time-per-physical-setup">Prerequisites (one-time per physical setup)<a class="headerlink" href="#prerequisites-one-time-per-physical-setup" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart TB
+    A([./scripts/launch_calibration.sh]) --&gt; B[Move arm to sim home pose&lt;br/&gt;all 6 joints centred]
+    B --&gt; C[ENTER → average 50 samples&lt;br/&gt;writes joint_offset_rad]
+    C --&gt; D{{For each joint i = 1..6}}
+    D --&gt; E[Move joint to MAX positive&lt;br/&gt;ENTER]
+    E --&gt; F[Move joint to MAX negative&lt;br/&gt;ENTER]
+    F --&gt; D
+    D -- all 6 done --&gt; G[Writes joint_min_rad / joint_max_rad&lt;br/&gt;per joint, overrides URDF defaults]
+    G --&gt; H[Move gripper to fully-OPEN pose&lt;br/&gt;ENTER → physical_open_rad]
+    H --&gt; I[Type gripper_offset_m — piston gap at full close&lt;br/&gt;ENTER]
+    I --&gt; J[(addverb_isaaclab/config/calibration.yaml&lt;br/&gt;previous file backed up)]
+    J --&gt; K([Bridge enters publish loop])
+
+    classDef step fill:#FEF3C7,stroke:#B45309,color:#78350F;
+    classDef data fill:#DBEAFE,stroke:#1D4ED8,color:#1E3A8A;
+    class B,C,E,F,H,I step
+    class G,J data</code></pre>
+<p>Calibration aligns hardware joint encoders + the gripper-actuator zero
+point with the sim. Run <strong>once after mounting the arm</strong>, and again any
+time the leader is dismantled or homing drifts.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./scripts/launch_calibration.sh
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># overrides:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">INTERFACE</span><span class="o">=</span>can1<span class="w"> </span>./scripts/launch_calibration.sh
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">MODEL</span><span class="o">=</span>ADD<span class="w">      </span>./scripts/launch_calibration.sh
+</span></code></pre></div>
+<p>Interactive prompts:</p>
+<ol>
+<li>Move leader arm to the sim home pose (all 6 arm joints centred), press
+   <code>ENTER</code> → averages 50 samples, writes <code>joint_offset_rad</code>.</li>
+<li>For each of the 6 arm joints (link_1..link_6), move it to its MAX
+   positive extreme, press <code>ENTER</code>; then to its MAX negative extreme,
+   press <code>ENTER</code>. 12 captures total; the script writes the resulting
+   sim-frame range to <code>joint_min_rad</code> and <code>joint_max_rad</code> per joint.
+   These FULLY OVERRIDE the URDF-mirroring defaults in <code>agent_config.yaml</code>
+   — at sim-agent startup the mapper uses calibrated limits, never the
+   USD-baked ones.</li>
+<li>Move the gripper to the <strong>fully-OPEN</strong> mechanical pose (the
+   slider-crank zero), press <code>ENTER</code> → writes <code>physical_open_rad</code>.</li>
+<li>Type the <strong>gripper offset</strong> (in metres) — distance between slide
+   pistons when the gripper is fully closed, measured with a calliper.
+   Blank to skip. Writes <code>gripper_offset_m</code>.</li>
+</ol>
+<p>Output → <code>addverb_isaaclab/config/calibration.yaml</code> (the previous file is
+backed up to <code>calibration.yaml.bak.&lt;ts&gt;</code>). The launcher then drops into
+the normal publishing loop, so you can <code>Ctrl+C</code> and start a session, or
+just let it run and launch the sim in another terminal.</p>
+<p><code>KinematicMapper</code> overlays <code>calibration.yaml</code> on top of <code>agent_config.yaml</code>
+at sim start. Watch the log for:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>[KinematicMapper] overlaid calibration from .../config/calibration.yaml
+</span></code></pre></div>
+<hr />
+<h2 id="per-session-workflow">Per-session workflow<a class="headerlink" href="#per-session-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
+flowchart LR
+    A[Edit launch_config.yaml] --&gt; B[./scripts/launch_bridge.sh&lt;br/&gt;Terminal 1]
+    B --&gt; C[./scripts/launch_sim.sh&lt;br/&gt;Terminal 2]
+    C --&gt; D[Teleop: back-drive leader&lt;br/&gt;sim follows ~50 ms latency&lt;br/&gt;Cube spawns randomly]
+    D --&gt; E{Action?}
+    E -- R --&gt; F[Reset both arms&lt;br/&gt;cube re-spawns&lt;br/&gt;same episode keeps growing]
+    F --&gt; D
+    E -- S --&gt; G[Save current episode&lt;br/&gt;auto-bump episode_num&lt;br/&gt;home both arms]
+    G --&gt; D
+    E -- E or Ctrl+C --&gt; H[Logger flushes Parquet&lt;br/&gt;writes meta/info.json]
+    H --&gt; Z([Exit])
+
+    classDef key fill:#FCE7F3,stroke:#BE185D,color:#831843;
+    class E key</code></pre>
+<h3 id="1-edit-launch_configyaml-one-line-per-session">1. Edit <code>launch_config.yaml</code> (one-line per session)<a class="headerlink" href="#1-edit-launch_configyaml-one-line-per-session" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">real</span><span class="w">           </span><span class="c1"># &#39;mock&#39; for hardware-free dry run, &#39;real&#39; for the arm</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">sim</span><span class="p">:</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">task</span><span class="p">:</span><span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">Addverb-Teleop-Cam-v0</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">leader_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp://localhost:5556</span><span class="w">          </span><span class="c1"># cross-machine: tcp://&lt;hw-ip&gt;:5556</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">repo_root</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">/workspace/datasets/session_001</span><span class="w">    </span><span class="c1"># path INSIDE the container</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">episode_num</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nt">bridge</span><span class="p">:</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nt">conda_env</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">unified_addverb_isaaclab</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nt">config_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">addverb_isaaclab/config/bridge_config.yaml</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nt">mock_sine</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                          </span><span class="c1"># mock-mode: send slow sine</span>
+</span></code></pre></div>
+<p><code>repo_root</code> is interpreted <strong>inside the container</strong> — <code>/workspace/datasets/</code>
+maps to <code>&lt;repo&gt;/datasets/</code> on the host (mounted by <code>docker/run_sim.sh</code>).</p>
+<h3 id="2-start-the-bridge">2. Start the bridge<a class="headerlink" href="#2-start-the-bridge" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>./scripts/launch_bridge.sh<span class="w">                   </span><span class="c1"># mode from launch_config.yaml</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Or force the mode:</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">MODE</span><span class="o">=</span>real<span class="w"> </span>./scripts/launch_bridge.sh
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">MODE</span><span class="o">=</span>mock<span class="w"> </span>./scripts/launch_bridge.sh
+</span></code></pre></div>
+<p>The bridge stays attached to the terminal, prints joint frames at the
+configured <code>control.loop_hz</code> (200 Hz), and listens for keyboard control:
+- <code>R</code> — reset both physical arm (<code>reset_to_home()</code>) and the sim env
+- <code>S</code> — finalize the current dataset episode, home both arms, and
+  start a fresh episode (auto-increments <code>episode_num</code>). Use this
+  between takes — saves to disk before homing so the homing motion
+  itself is never logged into the episode you keep.
+- <code>E</code> — clean shutdown of bridge + sim</p>
+<p><code>pynput</code> is used in an X session; if no DISPLAY, an stdin-cbreak fallback
+takes over (terminal must have focus).</p>
+<h3 id="3-start-the-sim">3. Start the sim<a class="headerlink" href="#3-start-the-sim" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>./scripts/launch_sim.sh<span class="w">                      </span><span class="c1"># uses launch_config.yaml as-is</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">EPISODE_NUM</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>./scripts/launch_sim.sh<span class="w">        </span><span class="c1"># bump episode without editing yaml</span>
+</span></code></pre></div>
+<p>The container brings up Isaac Sim with two floating viewport windows
+(<code>WristCam</code>, <code>TableCam</code>) showing the same RGB streams the logger writes.
+<code>SimDataLogger</code> starts in a background thread — the first prints look
+like:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>[SimDataLogger] config       : .../dataset_config.yaml
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>[SimDataLogger]   log image  : 320x320  jpeg_q=95
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>[SimDataLogger]   cameras    : [&#39;ego&#39;, &#39;external&#39;]
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>[SimDataLogger]   joint/act  : 7/7
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>[SimDataLogger]   rate       : 30.0 Hz
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>[SimDataLogger] Episode 0 started → /workspace/datasets/session_001
+</span></code></pre></div>
+<h3 id="4-move-the-leader-capture-end-the-episode">4. Move the leader, capture, end the episode<a class="headerlink" href="#4-move-the-leader-capture-end-the-episode" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Back-drive the physical leader by hand. Sim follows in real time
+  (effective end-to-end latency: ~50 ms, dominated by sensor render time).</li>
+<li>The cube spawns randomly on the table at every reset. Pick + place it.</li>
+<li>Press <code>R</code> on the bridge keyboard to reset for the next take.</li>
+<li>Press <code>E</code> (or <code>Ctrl+C</code>) to exit cleanly. The logger flushes Parquet
+  rows + writes <code>meta/info.json</code> before the env tears down.</li>
+</ul>
+<h3 id="5-multi-episode">5. Multi-episode<a class="headerlink" href="#5-multi-episode" title="Permanent link">&para;</a></h3>
+<p>Four options, in order of preference:</p>
+<ul>
+<li>
+<p><strong>Press <code>S</code> between takes (recommended)</strong> — finalizes the current
+  episode to Parquet+JPEG, increments <code>episode_num</code>, starts a fresh
+  episode, and homes both the physical leader and the sim arm. No
+  Isaac Sim restart needed. Pair with <code>R</code> for an in-episode reset
+  that does not save.</p>
+</li>
+<li>
+<p><strong>Restart with bumped <code>episode_num</code></strong> —
+  <code>EPISODE_NUM=N ./scripts/launch_sim.sh</code>. Use when you also want to
+  reload yaml configs or pick up code changes; pays the Isaac Sim
+  startup cost (~30 s).</p>
+</li>
+<li>
+<p><strong>Press <code>R</code> mid-session</strong> — resets the env (cube re-spawns); the
+  current episode keeps growing under the same <code>episode_num</code>. Use for
+  long-running rollouts in one episode.</p>
+</li>
+<li>
+<p><strong>Auto-home reset</strong> — if the operator returns the arm to home (all
+  six arm joints within 0.03 rad of zero) for more than 50 frames, the
+  agent triggers an env reset by itself. Useful for hands-off chained
+  takes within the same episode.</p>
+</li>
+</ul>
+<hr />
+<h2 id="output-layout">Output layout<a class="headerlink" href="#output-layout" title="Permanent link">&para;</a></h2>
+<p><code>repo_root</code> ends up as:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&lt;repo_root&gt;/
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── meta/
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│   ├── info.json                                 # codebase + robot + dof + image config
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│   ├── tasks.parquet                             # task name + prompt per episode
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│   └── episodes/chunk-000/file-000.parquet       # episode index (start row, length, ...)
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>├── data/chunk-000/file-000.parquet               # one row per logged frame
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>└── images/observation.images.&lt;cam&gt;/episode_&lt;N&gt;/&lt;timestamp_us&gt;.jpg
+</span></code></pre></div>
+<p><code>info.json</code> is filled in from <code>dataset_config.yaml</code>:
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;codebase_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v3.0&quot;</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;robot_type&quot;</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;addverb_sim_6dof&quot;</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;fps&quot;</span><span class="p">:</span><span class="w">             </span><span class="mf">30.0</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;joint_dim&quot;</span><span class="p">:</span><span class="w">       </span><span class="mi">7</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">&quot;action_dim&quot;</span><span class="p">:</span><span class="w">      </span><span class="mi">7</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nt">&quot;image_keys&quot;</span><span class="p">:</span><span class="w">      </span><span class="p">[</span><span class="s2">&quot;observation.images.ego&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;observation.images.external&quot;</span><span class="p">]</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<p><code>tasks.parquet</code> rows come from <code>dataset_config.yaml → task_ranges</code>. The
+default range covers all episode numbers <code>[0, 9999]</code> with prompt
+<code>"Pick up the object and place it in the designated location."</code>.</p>
+<hr />
+<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What lives here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>launch_config.yaml</code></td>
+<td>Single source of truth for <code>launch_*.sh</code>: mode, task, leader_addr, repo_root, episode</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/config/bridge_config.yaml</code></td>
+<td>Physical arm: CAN interface, leader PD gains, ZMQ port, control-loop Hz</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/config/agent_config.yaml</code></td>
+<td>Sim PC: ZMQ subscriber, KinematicMapper (sign flip / offset / gripper), logging</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/config/isaac_scene_config.yaml</code></td>
+<td>Scene physics, robot mount pose, USD path, cameras, actuator gains, table, cube</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/config/dataset_config.yaml</code></td>
+<td>Parquet schema (DOF dims), JPEG image size + quality, logging rate, task prompts</td>
+</tr>
+<tr>
+<td><code>addverb_isaaclab/config/calibration.yaml</code></td>
+<td>Auto-generated by <code>--calibrate</code>; overlays joint offsets + <code>physical_open_rad</code> on top of <code>agent_config.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<p>Important fields by file:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># agent_config.yaml — KinematicMapper</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">kinematics</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">isaac_joint_names</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">link_1_joint</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">link_6_joint</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">slide_1_joint</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># 7 entries</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">joint_sign_flip</span><span class="p">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">-1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">-1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">]</span><span class="w">                            </span><span class="c1"># per-joint sign</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nt">joint_offset_rad</span><span class="p">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span><span class="w">                              </span><span class="c1"># overlaid by calibration</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="nt">joint_min_rad</span><span class="p">:</span><span class="w">     </span><span class="p p-Indicator">[</span><span class="nv">-1.57</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">-1.57</span><span class="p p-Indicator">,</span><span class="w">  </span><span class="nv">0.00</span><span class="p p-Indicator">]</span><span class="w">                         </span><span class="c1"># arm rad / slide m</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nt">joint_max_rad</span><span class="p">:</span><span class="w">     </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">1.57</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w">  </span><span class="nv">1.57</span><span class="p p-Indicator">,</span><span class="w">  </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="nt">gripper</span><span class="p">:</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="nt">physical_open_rad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0193</span><span class="w">     </span><span class="c1"># actuator angle at fully-OPEN pose (theta=0 reference)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="nt">gripper_offset_m</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">0.0</span><span class="w">        </span><span class="c1"># measured slide-piston gap when fully closed (overlaid by calibration.yaml)</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># agent_config.yaml — SimDataLogger</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="nt">logging</span><span class="p">:</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                          </span><span class="c1"># set true to actually write Parquet/JPEG</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span><span class="nt">dataset_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/workspace/datasets/session_001</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="nt">episode_num</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="nt">fps</span><span class="p">:</span><span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">30.0</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span><span class="nt">task_prompt</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;Pick</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">object</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">place</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">tray.&quot;</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># dataset_config.yaml</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="nt">dof</span><span class="p">:</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">  </span><span class="nt">joints_per_arm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">  </span><span class="nt">gripper_dim</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">  </span><span class="nt">joint_dim</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">  </span><span class="nt">action_dim</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="nt">images</span><span class="p">:</span>
+</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">  </span><span class="nt">log_width</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">320</span>
+</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="w">  </span><span class="nt">log_height</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">320</span>
+</span><span id="__span-11-29"><a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">  </span><span class="nt">jpeg_quality</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">95</span>
+</span><span id="__span-11-30"><a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">  </span><span class="nt">cameras</span><span class="p">:</span><span class="w">      </span><span class="p p-Indicator">[</span><span class="nv">ego</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">external</span><span class="p p-Indicator">]</span>
+</span><span id="__span-11-31"><a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="nt">logging</span><span class="p">:</span>
+</span><span id="__span-11-32"><a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="w">  </span><span class="nt">rate_hz</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">30.0</span>
+</span></code></pre></div>
+<hr />
+<h2 id="gripper-kinematics-slider-crank">Gripper kinematics (slider-crank)<a class="headerlink" href="#gripper-kinematics-slider-crank" title="Permanent link">&para;</a></h2>
+<p>Hardware actuator angle <code>θ_raw</code> → simulated slide position <code>slide_m</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>theta    = θ_raw  -  physical_open_rad           # calibration zero
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>x_mm     = 35 · (1.6128 - cos θ - sqrt(1.249 - sin² θ))
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>x_clamp  = clamp(x_mm / 1000, 0, 0.05)
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>slide_m  = clamp((0.05 - x_clamp) + gripper_offset_m, 0, 0.05)
+</span></code></pre></div>
+<p>The <code>0.05 -</code> inverts the raw curve so the physical open pose maps
+to slide=0.05 (jaws OPEN at max travel) and the folded pose maps to
+slide=0 (jaws CLOSED). The trailing <code>+ gripper_offset_m</code> bumps the
+fully-closed slider value up by the measured piston gap (so simulated
+jaws sit <code>gripper_offset_m</code> apart at full close instead of fused at
+zero); the outer clamp keeps the slide inside the URDF <code>[0, 0.05]</code>
+range. <code>slide_m</code> is written to <strong>both</strong> <code>slide_1_joint</code> and
+<code>slide_2_joint</code> each step. The USD authors <code>slide_2</code>'s joint frame flipped 180° about X so
+equal positive joint values produce mirrored world motion (paddles
+separate). The ImplicitActuator PD gains
+(<code>isaac_scene_config.yaml → actuators.gripper</code>: stiffness 50000 N/m,
+damping 2000 N·s/m, effort 500 N) hold both stiffly.</p>
+<p><code>connect_1_2</code> and <code>connect_2_2</code> are rigidly welded (PhysicsFixedJoint) to
+their respective slides — no closed-loop linkage to drive.</p>
+<hr />
+<h2 id="mock-mode-no-hardware">Mock mode (no hardware)<a class="headerlink" href="#mock-mode-no-hardware" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>mode:<span class="w"> </span>mock<span class="w">                              </span><span class="c1"># in launch_config.yaml</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>bridge.mock_sine:<span class="w"> </span><span class="nb">true</span><span class="w">                  </span><span class="c1"># slow sine across all 7 joints</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>./scripts/launch_bridge.sh<span class="w">              </span><span class="c1"># publishes synthetic joint frames</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>./scripts/launch_sim.sh<span class="w">                 </span><span class="c1"># sim follows them</span>
+</span></code></pre></div>
+<p>Useful for end-to-end logger / pipeline checks without the leader arm.</p>
+<hr />
+<h2 id="cross-machine-bridge-on-a-different-pc">Cross-machine (bridge on a different PC)<a class="headerlink" href="#cross-machine-bridge-on-a-different-pc" title="Permanent link">&para;</a></h2>
+<p><code>scripts/launch_sim.sh</code> runs the container with <code>--network=host</code> so
+<code>tcp://localhost:5556</code> always reaches the host's bridge. To put the
+bridge on a different machine, edit <code>launch_config.yaml</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nt">sim</span><span class="p">:</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">leader_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp://10.0.4.117:5556</span><span class="w">    </span><span class="c1"># bridge PC&#39;s LAN IP</span>
+</span></code></pre></div>
+<p>The bridge config (<code>bridge_config.yaml → zmq.host: 0.0.0.0</code>) already
+listens on every interface, so no change needed on the bridge side.</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Robot USD not found</code> in launcher</td>
+<td>Path mismatch — confirm <code>assets/usd/addverb_arm/addverb_gripper_urdf_2.usd</code> exists and <code>isaac_scene_config.yaml → robot.usd_path</code> matches</td>
+</tr>
+<tr>
+<td><code>[ZMQLeaderReceiver] leader link stale (Xs); holding pose</code></td>
+<td>Bridge died or stopped publishing — restart <code>launch_bridge.sh</code>; sim freezes the last command (no garbage written to dataset)</td>
+</tr>
+<tr>
+<td><code>Address already in use</code> on bridge start</td>
+<td>Another bridge is bound to port 5556 — kill it or change <code>bridge_config.yaml → zmq.port</code></td>
+</tr>
+<tr>
+<td>Sim joint names mismatch in agent log</td>
+<td>Update <code>agent_config.yaml → kinematics.isaac_joint_names</code> to match <code>env.unwrapped.scene["robot"].data.joint_names</code></td>
+</tr>
+<tr>
+<td>Calibration overlay isn't applied</td>
+<td>Look for <code>[KinematicMapper] overlaid calibration from ...</code> in agent log; if missing, check <code>calibration.yaml</code> exists next to <code>agent_config.yaml</code></td>
+</tr>
+<tr>
+<td>Sim slides don't open with hardware actuator</td>
+<td>(a) <code>physical_open_rad</code> wrong — re-calibrate; (b) hardware actuator angle isn't moving past the dead-zone — slider-crank gives <code>x_m=0</code> for the first ~0.6 rad of motion (clamped negative); verify with <code>KinematicMapper.describe()</code> printout in the agent log</td>
+</tr>
+<tr>
+<td>Sim jaws move together instead of splitting apart</td>
+<td>USD <code>slide_2_joint</code> axis-flip lost — re-run <code>tools/configure_gripper_joints.py</code> to re-apply the 180° local-rotation flip</td>
+</tr>
+<tr>
+<td><code>pynput</code> fails with <code>DisplayNameError</code> (real bridge, no DISPLAY)</td>
+<td>Launch the bridge inside an X session, or run with stdin focus and use the cbreak fallback</td>
+</tr>
+<tr>
+<td>High teleop latency</td>
+<td>Drop <code>rendering.camera_update_period_s</code> to ~30 ms or lower camera resolution in <code>isaac_scene_config.yaml</code></td>
+</tr>
+<tr>
+<td>Cube falls through table</td>
+<td><code>table.center[2] + table.size[2]/2</code> must equal <code>robot.init_pos[2]</code>; cube's <code>z</code> is auto-computed from the table top — re-check both in <code>isaac_scene_config.yaml</code></td>
+</tr>
+<tr>
+<td>Pressed S but no new episode started</td>
+<td>Check the agent log for <code>saved episode N</code> + <code>started episode N+1</code>. If only the <code>saved</code> line appeared, the next <code>SimDataLogger</code> constructor failed — usually a config typo in <code>dataset_config.yaml</code>. Logging stops; restart the agent to recover.</td>
+</tr>
+<tr>
+<td>Empty / corrupt Parquet at episode end</td>
+<td>Confirm the agent printed <code>[SimDataLogger] Episode N started</code>; if not, <code>agent_config.yaml → logging.enabled</code> is <code>false</code> or <code>--repo_root</code> isn't passed</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "navigation.expand", "navigation.instant", "navigation.instant.progress", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="javascripts/sw-register.js"></script>
+      
+        <script src="javascripts/mermaid-init.js"></script>
+      
+    
+  </body>
+</html>

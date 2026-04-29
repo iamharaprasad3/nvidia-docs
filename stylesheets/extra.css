@@ -1,0 +1,156 @@
+/* =============================================================================
+ * Addverb docs theme overrides
+ *   primary  : #383838  (dark grey — matches the logo wordmark)
+ *   secondary: #ffffff  (white — used in lesser proportion: header text,
+ *              accent button labels, dark-mode highlights)
+ * ============================================================================= */
+
+/* ── Light mode ────────────────────────────────────────────────────────── */
+[data-md-color-scheme="default"] {
+  /* Header bar / top-app-bar */
+  --md-primary-fg-color:               #383838;
+  --md-primary-fg-color--light:        #4a4a4a;
+  --md-primary-fg-color--dark:         #1f1f1f;
+  --md-primary-bg-color:               #ffffff;
+  --md-primary-bg-color--light:        rgba(255, 255, 255, 0.85);
+
+  /* Accents (links, hover, active TOC item, search highlights) */
+  --md-accent-fg-color:                #383838;
+  --md-accent-fg-color--transparent:   rgba(56, 56, 56, 0.10);
+  --md-accent-bg-color:                #ffffff;
+  --md-accent-bg-color--light:         rgba(255, 255, 255, 0.85);
+
+  /* Body link colour (regular markdown <a>) */
+  --md-typeset-a-color:                #383838;
+}
+
+/* ── Dark mode (slate) ─────────────────────────────────────────────────── */
+[data-md-color-scheme="slate"] {
+  /* Keep the header dark grey (the logo's wordmark colour) so the brand
+     is consistent across themes. */
+  --md-primary-fg-color:               #383838;
+  --md-primary-fg-color--light:        #4a4a4a;
+  --md-primary-fg-color--dark:         #1f1f1f;
+  --md-primary-bg-color:               #ffffff;
+  --md-primary-bg-color--light:        rgba(255, 255, 255, 0.85);
+
+  /* In dark mode lift the accent to white so links pop against the dark BG. */
+  --md-accent-fg-color:                #ffffff;
+  --md-accent-fg-color--transparent:   rgba(255, 255, 255, 0.12);
+  --md-accent-bg-color:                #383838;
+  --md-accent-bg-color--light:         rgba(56, 56, 56, 0.85);
+
+  --md-typeset-a-color:                #d8d8d8;
+}
+
+/* ── Logo sizing ──────────────────────────────────────────────────────────
+ * The left-logo.png ships at 1731×258 (a wide wordmark). Constrain its
+ * displayed height inside the header so it doesn't blow out the bar.
+ * ============================================================================= */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 1.6rem;
+  width: auto;
+  max-width: 12rem;
+}
+
+/* Slightly tighter top app-bar so the wider wordmark doesn't feel cramped. */
+.md-header {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ── Code-block tweak: a small left-border in the brand colour ────────── */
+.md-typeset pre > code {
+  border-left: 3px solid var(--md-primary-fg-color);
+}
+[data-md-color-scheme="slate"] .md-typeset pre > code {
+  border-left-color: var(--md-accent-fg-color);
+}
+
+/* ── Mermaid diagrams: legibility in light and dark modes ────────────────
+ * Each diagram now ships a `%%{init: {...}}%%` directive that pins it to a
+ * single fixed palette (light fills, dark borders, dark labels) regardless
+ * of the page color scheme. The CSS below only adds a thin compatibility
+ * layer for the few elements that still pick colours from Material's
+ * mermaid theme (edge-label background pill on the page background, cluster
+ * titles, sequence-diagram message text). It deliberately uses targeted
+ * selectors and avoids `!important` on `fill`/`stroke` so it never overrides
+ * the per-diagram classDef colours.
+ * ============================================================================= */
+.md-typeset .mermaid {
+  text-align: center;
+}
+.md-typeset .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  background: transparent;
+}
+
+/* Light mode: edge-label pill on the white page background. */
+[data-md-color-scheme="default"] .md-typeset .mermaid .edgeLabel,
+[data-md-color-scheme="default"] .md-typeset .mermaid .edgeLabel rect {
+  background-color: #ffffff;
+  fill: #ffffff;
+}
+[data-md-color-scheme="default"] .md-typeset .mermaid .edgeLabel,
+[data-md-color-scheme="default"] .md-typeset .mermaid .edgeLabel span,
+[data-md-color-scheme="default"] .md-typeset .mermaid .edgeLabel text {
+  color: #1f1f1f;
+  fill: #1f1f1f;
+}
+
+/* Dark mode (slate): edge labels float on the dark page background, so we
+ * give them a dark pill with light text. The diagram interiors keep their
+ * pinned light fills (set by each diagram's init directive), so dark-mode
+ * legibility comes for free for nodes, classDef boxes, etc. */
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel rect,
+[data-md-color-scheme="slate"] .md-typeset .mermaid foreignObject .edgeLabel {
+  background-color: #2a2a2a;
+  fill: #2a2a2a;
+}
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel span,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel p,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel text {
+  color: #f5f5f5;
+  fill: #f5f5f5;
+}
+
+/* Cluster (subgraph) titles sit on the page background, outside the cluster
+ * box. In dark mode they are barely visible without help. */
+[data-md-color-scheme="slate"] .md-typeset .mermaid .cluster > text,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .cluster-label foreignObject,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .cluster-label span,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .cluster-label p {
+  color: #f5f5f5;
+  fill: #f5f5f5;
+}
+
+/* Sequence diagram: message text floats on the page background. */
+[data-md-color-scheme="slate"] .md-typeset .mermaid .messageText,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .loopText > tspan,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .loopText {
+  fill: #f5f5f5;
+}
+[data-md-color-scheme="slate"] .md-typeset .mermaid .actor-line {
+  stroke: #9aa0a6;
+}
+
+/* State diagram: transition labels float on the page background. */
+[data-md-color-scheme="slate"] .md-typeset .mermaid g.transition text,
+[data-md-color-scheme="slate"] .md-typeset .mermaid .edgeLabel.transition {
+  fill: #f5f5f5;
+  color: #f5f5f5;
+}
+
+/* ── Index-page card grid (icons + headings on the home page) ─────────── */
+.md-typeset .grid.cards > :is(ul, ol) > li,
+.md-typeset .grid > .card {
+  border: 1px solid rgba(56, 56, 56, 0.18);
+}
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > :is(ul, ol) > li,
+[data-md-color-scheme="slate"] .md-typeset .grid > .card {
+  border-color: rgba(255, 255, 255, 0.18);
+}
