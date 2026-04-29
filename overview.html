@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Operator's guide for the Addverb 6-DOF arm running as a teleoperation leader against an Isaac Lab sim follower with VLA-format dataset collection.
+        <meta name="description" content="Operator's guide for the QDD 6-DOF arm running as a teleoperation leader against an Isaac Lab sim follower with VLA-format dataset collection.
 ">
       
       
@@ -26,7 +26,7 @@
     
     
       
-        <title>Overview - Addverb Arm — Sim-to-Real Docs</title>
+        <title>Overview - QDD Arm — Sim-to-Real Docs</title>
       
     
     
@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#addverb-arms-isaac-lab-hybrid-development-environment" class="md-skip">
+        <a href="#qdd-arms-isaac-lab-hybrid-development-environment" class="md-skip">
           Skip to content
         </a>
       
@@ -95,7 +95,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-header__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+    <a href="index.html" title="QDD Arm — Sim-to-Real Docs" class="md-header__button md-logo" aria-label="QDD Arm — Sim-to-Real Docs" data-md-component="logo">
       
   <img src="assets/left-logo.png" alt="logo">
 
@@ -108,7 +108,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Addverb Arm — Sim-to-Real Docs
+            QDD Arm — Sim-to-Real Docs
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -373,12 +373,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="Addverb Arm — Sim-to-Real Docs" class="md-nav__button md-logo" aria-label="Addverb Arm — Sim-to-Real Docs" data-md-component="logo">
+    <a href="index.html" title="QDD Arm — Sim-to-Real Docs" class="md-nav__button md-logo" aria-label="QDD Arm — Sim-to-Real Docs" data-md-component="logo">
       
   <img src="assets/left-logo.png" alt="logo">
 
     </a>
-    Addverb Arm — Sim-to-Real Docs
+    QDD Arm — Sim-to-Real Docs
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -561,10 +561,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-build-the-addverb-arms-c-pybind-module" class="md-nav__link">
+  <a href="#step-2-build-the-qdd-arms-c-pybind-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2 — Build the Addverb Arms C++ pybind module
+        Step 2 — Build the QDD Arms C++ pybind module
       
     </span>
   </a>
@@ -1022,7 +1022,7 @@
 
 
 
-<h1 id="addverb-arms-isaac-lab-hybrid-development-environment">Addverb Arms + Isaac Lab — Hybrid Development Environment<a class="headerlink" href="#addverb-arms-isaac-lab-hybrid-development-environment" title="Permanent link">&para;</a></h1>
+<h1 id="qdd-arms-isaac-lab-hybrid-development-environment">QDD Arms + Isaac Lab — Hybrid Development Environment<a class="headerlink" href="#qdd-arms-isaac-lab-hybrid-development-environment" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p><strong>Hardware on host. Simulation in Docker. Connected by ZMQ.</strong></p>
 </blockquote>
@@ -1070,7 +1070,7 @@ training/eval flows live in <em>Sim-to-Real Training</em>.</p>
 <hr />
 <h2 id="full-sim-to-real-pipeline-at-a-glance">Full sim-to-real pipeline at a glance<a class="headerlink" href="#full-sim-to-real-pipeline-at-a-glance" title="Permanent link">&para;</a></h2>
 <p>The repository covers the complete sim-to-real loop for the 7-DoF
-Addverb arm (6 revolute + 1 prismatic gripper). Five stages, each
+QDD arm (6 revolute + 1 prismatic gripper). Five stages, each
 documented in detail on its own page:</p>
 <pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
 flowchart LR
@@ -1228,7 +1228,7 @@ flowchart TB
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>unified_env.yml
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
 </span></code></pre></div>
-<h3 id="step-2-build-the-addverb-arms-c-pybind-module">Step 2 — Build the Addverb Arms C++ pybind module<a class="headerlink" href="#step-2-build-the-addverb-arms-c-pybind-module" title="Permanent link">&para;</a></h3>
+<h3 id="step-2-build-the-qdd-arms-c-pybind-module">Step 2 — Build the QDD Arms C++ pybind module<a class="headerlink" href="#step-2-build-the-qdd-arms-c-pybind-module" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>unified_addverb_isaaclab
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>addverb_arms/python_bindings/pybind
@@ -1557,6 +1557,8 @@ script into a new project make sure that pair stays intact.</p>
       <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="javascripts/sw-register.js"></script>
+      
+        <script src="javascripts/video-persist.js"></script>
       
         <script src="javascripts/mermaid-init.js"></script>
       

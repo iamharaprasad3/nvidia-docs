@@ -5,10 +5,15 @@
 
 (function () {
     if (!("serviceWorker" in navigator)) return;
-    // Register at site root scope so it can intercept assets/videos/* on every page.
-    const swUrl = (document.querySelector('base')?.href || (location.origin + '/')) + 'sw.js';
+    // The SW lives at site root (sw.js). Resolving against the <base> tag (or
+    // the document) gives us its absolute URL. Scope is omitted so it defaults
+    // to the SW's own directory — which is the site root — letting it
+    // intercept /assets/videos/* from every page.
+    const baseHref = (document.querySelector("base") && document.querySelector("base").href) ||
+                     (location.origin + "/");
+    const swUrl = new URL("sw.js", baseHref).href;
     window.addEventListener("load", function () {
-        navigator.serviceWorker.register(swUrl, { scope: "./" }).catch(function () {
+        navigator.serviceWorker.register(swUrl).catch(function () {
             // ignore — file:// or unsupported context
         });
     });
