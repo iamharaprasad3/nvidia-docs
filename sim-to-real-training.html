@@ -1005,9 +1005,10 @@
 <h1 id="sim-to-real-training-pipeline-dr-gr00t-co-training">Sim-to-Real Training Pipeline (DR, GR00T, Co-training)<a class="headerlink" href="#sim-to-real-training-pipeline-dr-gr00t-co-training" title="Permanent link">&para;</a></h1>
 <p>End-to-end recipe for training a vision-language-action (VLA) policy on top
 of the Addverb teleoperation stack and deploying it back onto the physical
-arm. Targets <strong>our</strong> hardware (7-DoF Addverb arm — 6 revolute joints + 1
-prismatic gripper) and <strong>our</strong> dataset (3 USB cameras, LeRobot Parquet/JPEG
-via <code>addverb_vla_datacollection</code>).</p>
+arm. Targets <strong>our</strong> hardware (7-DoF Addverb arm — 6 active revolute joints
+plus a welded wrist flange in sim + 1 prismatic gripper) and <strong>our</strong> dataset
+(2 USB cameras for single-arm captures, LeRobot Parquet/JPEG via
+<code>addverb_vla_datacollection</code>).</p>
 <p>The recipe has five stages:</p>
 <pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
 flowchart LR
@@ -1067,46 +1068,59 @@ via three event terms in <code>addverb_env_cfg.py</code>:</p>
 <tr>
 <th>Helper</th>
 <th>Purpose</th>
-<th>Range source</th>
+<th>YAML knob (under <code>domain_randomization:</code>)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>randomize_camera_focal_length</code></td>
 <td>Perturb FOV of a camera sensor</td>
-<td><code>domain_randomization.camera_ego_focal_length_range</code></td>
+<td><code>camera_ego_focal_length.{enabled, range_mm}</code></td>
 </tr>
 <tr>
 <td><code>randomize_camera_pose</code></td>
 <td>Perturb camera position / orientation</td>
-<td><code>domain_randomization.camera_external_pos_range</code> + <code>…_rot_range</code></td>
+<td><code>camera_external_pose.{enabled, pos_range, rot_range}</code></td>
 </tr>
 <tr>
 <td><code>randomize_light_exposure</code></td>
 <td>Vary scene brightness</td>
-<td><code>domain_randomization.light_exposure_range</code></td>
+<td><code>light_exposure.{enabled, range_ev}</code></td>
 </tr>
 <tr>
 <td><code>random_asset_pose</code></td>
 <td>Randomise cube/asset pose</td>
-<td><code>cube.spawn_range</code> + per-axis rot range</td>
+<td>always-on; driven by <code>cube.spawn_range</code></td>
 </tr>
 </tbody>
 </table>
-<p>The current ranges in <code>addverb_isaaclab/config/isaac_scene_config.yaml</code>
-(<code>domain_randomization:</code> block) are:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">light_exposure_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-3.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">]</span><span class="w">              </span><span class="c1"># EV</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">mat_yaw_range</span><span class="p">:</span><span class="w">        </span><span class="p p-Indicator">[</span><span class="nv">-0.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.1</span><span class="p p-Indicator">]</span><span class="w">              </span><span class="c1"># rad, workspace mat rotation</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">camera_ego_focal_length_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">15.0</span><span class="p p-Indicator">]</span><span class="w">    </span><span class="c1"># mm  (±10 % around 13.5)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">camera_external_pos_range</span><span class="p">:</span><span class="w">                     </span><span class="c1"># m, per-axis</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.01</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">camera_external_rot_range</span><span class="p">:</span><span class="w">                     </span><span class="c1"># rad, per-axis</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">roll</span><span class="p">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">yaw</span><span class="p">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+<p>Each block has its own <code>enabled: true|false</code> flag (default <code>false</code>); a
+disabled block adds no <code>EventTermCfg</code>, so the env behaves identically to a
+non-DR run. Toggle individual knobs without rebuilding anything.</p>
+<p>The current YAML in <code>addverb_isaaclab/config/isaac_scene_config.yaml</code>
+(<code>domain_randomization:</code> block) is:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">domain_randomization</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">camera_ego_focal_length</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">range_mm</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">15.0</span><span class="p p-Indicator">]</span><span class="w">              </span><span class="c1"># mm  (±10 % around 13.5)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">camera_external_pose</span><span class="p">:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">pos_range</span><span class="p">:</span><span class="w">                          </span><span class="c1"># m, per-axis delta</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.01</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">rot_range</span><span class="p">:</span><span class="w">                          </span><span class="c1"># rad, per-axis delta</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">roll</span><span class="p">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nt">yaw</span><span class="p">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="nt">light_exposure</span><span class="p">:</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nt">range_ev</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-3.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">]</span>
 </span></code></pre></div>
+<p>Flip the relevant <code>enabled: true</code> to activate a knob — no other change is
+required.</p>
 <h3 id="recommended-ranges">Recommended ranges<a class="headerlink" href="#recommended-ranges" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1200,11 +1214,15 @@ agent (<code>addverb_agent.py</code>) writes the episode.</p>
 </tbody>
 </table>
 <h3 id="task-prompt-strings">Task prompt strings<a class="headerlink" href="#task-prompt-strings" title="Permanent link">&para;</a></h3>
-<p>Pin one English sentence per task and store it as <code>task_prompt</code> — see
-<code>EPISODE_TASK_RANGES</code> in <code>config_single.py</code> (or <code>config.py</code> for the
-dual-arm setup). Update the <code>task_prompt</code> string before recording so the
-parquet <code>task_index</code> column points at the right description. The default
-is a single-arm pick-and-place:</p>
+<p>Pin one English sentence per task and store it as <code>task_prompt</code>. The
+location depends on which capture path you use:</p>
+<ul>
+<li><strong>Sim capture</strong> (<code>addverb_isaaclab</code>): <code>addverb_isaaclab/config/dataset_config.yaml → task_ranges</code>. Each entry is <code>[start_ep, end_ep, task_name, task_prompt]</code>. <code>SimDataLogger._get_task_prompt(episode_num)</code> resolves the active prompt at log time and stamps it into both each row and <code>meta/tasks.parquet</code>.</li>
+<li><strong>Real-hardware capture</strong> (<code>addverb_vla_datacollection</code>): <code>EPISODE_TASK_RANGES</code> in <code>config_single.py</code> (or <code>config.py</code> for the dual-arm setup).</li>
+</ul>
+<p>Update the <code>task_prompt</code> string before recording so the parquet
+<code>task_index</code> column points at the right description. The default
+single-arm prompt is:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&quot;Use the leader arm to teleoperate the follower arm and complete the
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> manipulation task.&quot;
 </span></code></pre></div>
@@ -1332,13 +1350,17 @@ annotations and varied conditions.</p>
    describing:</p>
 </li>
 <li>
-<p>Joint count → <strong>7</strong> (6 revolute + 1 prismatic gripper).</p>
+<p>Joint count → <strong>7</strong> (6 active arm revolutes + 1 prismatic gripper;
+     <code>link_7</code> is welded as a fixed flange in sim and never enters the
+     vector).</p>
 </li>
 <li>
-<p>Camera-name mapping that our parquet produces:
-     <code>camera1_images, camera2_images, camera3_images</code>. Pick canonical
-     names GR00T expects (e.g. <code>top</code>, <code>left</code>, <code>right</code>) and apply the
-     rename via the config or via <code>--rename_map</code> at train time.</p>
+<p>Camera-name mapping that our parquet produces depends on the capture
+     path: single-arm hardware emits <code>camera1_images, camera2_images</code>
+     (top + wrist); the sim follower emits <code>observation.images.ego</code> and
+     <code>observation.images.external</code>. Pick canonical names GR00T expects
+     (e.g. <code>top</code>, <code>wrist</code>, or <code>ego</code>/<code>external</code>) and apply the rename via
+     the config or via <code>--rename_map</code> at train time.</p>
 </li>
 <li>
 <p><strong>Embodiment tag.</strong> <code>--embodiment_tag NEW_EMBODIMENT</code> is fine for a
@@ -1608,7 +1630,7 @@ flowchart LR
 </tr>
 <tr>
 <td>(to author) <code>examples/AddverbArm/addverb_config.py</code></td>
-<td>GR00T modality config: 7-DoF + 3 cameras</td>
+<td>GR00T modality config: 7-DoF (6 active arm + 1 gripper) + 2 cameras (top + wrist single-arm, or ego + external sim)</td>
 </tr>
 <tr>
 <td>(to author) <code>Isaac-GR00T/gr00t/eval/real_robot/Addverb/addverb_eval.py</code></td>

@@ -1070,8 +1070,9 @@ training/eval flows live in <em>Sim-to-Real Training</em>.</p>
 <hr />
 <h2 id="full-sim-to-real-pipeline-at-a-glance">Full sim-to-real pipeline at a glance<a class="headerlink" href="#full-sim-to-real-pipeline-at-a-glance" title="Permanent link">&para;</a></h2>
 <p>The repository covers the complete sim-to-real loop for the 7-DoF
-QDD arm (6 revolute + 1 prismatic gripper). Five stages, each
-documented in detail on its own page:</p>
+QDD arm (6 active revolute joints + 1 welded wrist flange in sim
++ 1 prismatic gripper). Five stages, each documented in detail on
+its own page:</p>
 <pre class="mermaid"><code>%%{init: {'theme':'base','themeVariables':{'background':'transparent','primaryColor':'#f5f5f5','primaryBorderColor':'#383838','primaryTextColor':'#1f1f1f','lineColor':'#383838','textColor':'#1f1f1f','mainBkg':'#f5f5f5','nodeBkg':'#f5f5f5','nodeBorder':'#383838','clusterBkg':'#fafafa','clusterBorder':'#6b7280','titleColor':'#1f1f1f','edgeLabelBackground':'#ffffff','actorBkg':'#f5f5f5','actorBorder':'#383838','actorTextColor':'#1f1f1f','actorLineColor':'#6b7280','signalColor':'#1f1f1f','signalTextColor':'#1f1f1f','labelBoxBkgColor':'#f5f5f5','labelBoxBorderColor':'#383838','labelTextColor':'#1f1f1f','noteBorderColor':'#B45309','noteBkgColor':'#FEF3C7','noteTextColor':'#78350F'}}}%%
 flowchart LR
     S1["&lt;b&gt;1. CAPTURE&lt;/b&gt;&lt;br/&gt;Teleop with DR&lt;br/&gt;(or real arm)&lt;br/&gt;→ Parquet + JPEG"]
@@ -1104,12 +1105,12 @@ flowchart LR
 <tr>
 <td>1a. Sim capture (with DR)</td>
 <td><a href="data-collection.html">Data Collection (Sim)</a></td>
-<td><code>addverb_sim_dataset/</code> — Parquet + JPEG, 30 Hz, 7-DoF, randomised lighting/camera/asset pose</td>
+<td><code>addverb_sim_dataset/</code> — Parquet + JPEG, 30 Hz, 7-DoF, optional randomised lighting/camera focal/camera pose</td>
 </tr>
 <tr>
 <td>1b. Real-hardware capture</td>
 <td><a href="real-hardware-data-collection.html">Real-Hardware Data Collection</a></td>
-<td><code>addverb_single_arm_dataset/</code> — same schema, three USB cameras</td>
+<td><code>addverb_single_arm_dataset/</code> — same schema, two USB cameras (top + wrist)</td>
 </tr>
 <tr>
 <td>2. GR00T N1.6 fine-tune</td>
@@ -1133,12 +1134,16 @@ flowchart LR
 </tr>
 </tbody>
 </table>
-<p>Domain-randomisation ranges (lighting EV, camera focal length /
-pose, workspace mat yaw, cube spawn) live in
-<code>addverb_isaaclab/config/isaac_scene_config.yaml → domain_randomization</code>
-and are applied as reset events in
-<code>addverb_isaaclab/sim_agent/mdp/resets.py</code> — change them in one
-place and they propagate to every captured episode.</p>
+<p>Domain-randomisation ranges (camera ego focal length, camera external
+pose, light exposure) live in
+<code>addverb_isaaclab/config/isaac_scene_config.yaml → domain_randomization</code>.
+Each block has its own <code>enabled: true|false</code> flag (defaults are
+<code>false</code>), and the helper functions in
+<code>addverb_isaaclab/sim_agent/mdp/resets.py</code> are wired into reset events by
+<code>addverb_isaaclab/sim_agent/addverb_env_cfg.py</code> only for blocks that are
+enabled. Toggle a single knob without rebuilding the env. Cube spawn
+position is always randomised at every reset (driven by
+<code>isaac_scene_config.yaml → cube.spawn_range</code>).</p>
 <p>The dataset format is <strong>identical</strong> between sim and real captures, which
 is what makes Stage 5 co-training straightforward — point the trainer at
 a directory containing both Parquet roots and let the sampler do the

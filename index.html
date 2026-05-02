@@ -758,9 +758,9 @@ multi-episode strategies, troubleshooting.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.41 4 16 6.41v.18L18.41 9H22v2h-4.41L16 9.41V12h-1a2 2 0 0 1-2-2V7.5H9.86c-.09.37-.24.72-.44 1.05L15.18 19H20a2 2 0 0 1 2 2v1H2v-1a2 2 0 0 1 2-2h6.61l-4.69-8.5a4.006 4.006 0 0 1-3.81-3A4 4 0 0 1 5 2.63c2.13-.55 4.31.73 4.86 2.87H13V3a2 2 0 0 1 2-2h1v2.59L17.59 2H22v2zM6 4.5a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2"/></svg></span> <strong>Stage 1b — <a href="real-hardware-data-collection.html">Real-Hardware Data Collection</a></strong></p>
-<p>Same dataset format captured on the physical arm with three USB
-cameras (no sim involvement). Used for Stage 4 demos and the
-real-side of Stage 5 co-training.</p>
+<p>Same dataset format captured on the physical arm with two USB
+cameras (top + wrist; no sim involvement). Used for Stage 4 demos
+and the real-side of Stage 5 co-training.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg></span> <strong>Stages 2–5 — <a href="sim-to-real-training.html">Sim-to-Real Training</a></strong></p>
@@ -784,7 +784,7 @@ eval → co-training, with the full training command adapted to our
 <tr>
 <td>1a — Sim capture</td>
 <td><code>scripts/launch_bridge.sh</code> + <code>scripts/launch_sim.sh</code></td>
-<td><code>dataset_config.yaml</code> + <code>isaac_scene_config.yaml → domain_randomization</code></td>
+<td><code>agent_config.yaml → logging</code> (rate, dataset_root) + <code>dataset_config.yaml → task_ranges</code> (prompts) + <code>isaac_scene_config.yaml → domain_randomization</code> (DR)</td>
 <td>50–200 demos per task in <code>addverb_sim_dataset/</code></td>
 </tr>
 <tr>
@@ -821,8 +821,12 @@ eval → co-training, with the full training command adapted to our
 </table>
 <h2 id="conventions">Conventions<a class="headerlink" href="#conventions" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Joint vector</strong> is always 7-DOF: <code>[link_1..link_6]</code> (rad) + <code>slide_1</code> (m).
-  <code>slide_2</code> mirrors <code>slide_1</code> automatically (env hook + USD axis flip).</li>
+<li><strong>Joint vector</strong> is always 7 entries: <code>[link_1..link_6]</code> (rad) +
+  <code>slide_1</code> (m). <code>slide_2</code> mirrors <code>slide_1</code> automatically (env hook +
+  USD axis flip). <code>link_7</code> is welded as a <code>PhysicsFixedJoint</code> in the
+  USD physics layer (the wrist flange is never actuated on hardware),
+  so it has no DOF and never appears in the action / observation
+  vectors.</li>
 <li><strong>Gripper kinematics</strong> is slider-crank, calibrated by a single
   reference angle <code>physical_open_rad</code>.</li>
 <li><strong>Single source of truth</strong> for launching is <code>launch_config.yaml</code> at
@@ -831,8 +835,16 @@ eval → co-training, with the full training command adapted to our
   (Parquet rows + per-episode JPEGs), so the two streams can be mixed
   for co-training (Stage 5).</li>
 <li><strong>Domain randomisation</strong> ranges live in
-  <code>isaac_scene_config.yaml → domain_randomization</code> and are applied as
-  reset events in <code>addverb_isaaclab/sim_agent/mdp/resets.py</code>.</li>
+  <code>isaac_scene_config.yaml → domain_randomization</code>. Each block carries
+  its own <code>enabled: true|false</code> flag (default <code>false</code>); only enabled
+  blocks are wired as reset events at env build time.</li>
+<li><strong>Logging knobs</strong> (operational): rate, queue depth, debug-print
+  frequency, output path → <code>agent_config.yaml → logging</code>. Dataset
+  schema (image dims, jpeg quality, dof layout, <code>task_ranges</code>) →
+  <code>dataset_config.yaml</code>. <strong>Task prompts</strong> come from
+  <code>dataset_config.yaml → task_ranges</code> for sim captures, and from
+  <code>EPISODE_TASK_RANGES</code> in <code>addverb_vla_datacollection/config_single.py</code>
+  for hardware captures.</li>
 </ul>
 <hr />
 <p>If you find a stale section, fix the source markdown and refresh. The

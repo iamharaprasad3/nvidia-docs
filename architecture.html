@@ -617,6 +617,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-do-task-prompts-come-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where do task prompts come from?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-randomisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain randomisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1160,15 +1188,15 @@ banner into <code>config/agent_config.yaml → kinematics.isaac_joint_names</cod
 </tr>
 <tr>
 <td><code>config/agent_config.yaml</code></td>
-<td>ZMQ address, joint names, sign flips, offsets, limits, gripper map</td>
+<td>ZMQ address, kinematics (joint names/sign flips/offsets/limits/gripper), <strong>logging knobs</strong> (fps, dataset_root, debug rate, queue depth)</td>
 </tr>
 <tr>
 <td><code>config/isaac_scene_config.yaml</code></td>
-<td>Table, cube, robot mount position, cameras, physics, <strong>rendering</strong></td>
+<td>Table, cube, robot mount, cameras, physics, <strong>rendering</strong>, <strong>domain randomisation</strong></td>
 </tr>
 <tr>
 <td><code>config/dataset_config.yaml</code></td>
-<td>DOF layout, image resolution, logging rate, task prompts</td>
+<td>Dataset schema: dof layout, image dims, jpeg quality, <strong>task prompts</strong> (<code>task_ranges</code>), codebase/robot type</td>
 </tr>
 <tr>
 <td><code>config/calibration.yaml</code></td>
@@ -1176,15 +1204,44 @@ banner into <code>config/agent_config.yaml → kinematics.isaac_joint_names</cod
 </tr>
 </tbody>
 </table>
+<h3 id="where-do-task-prompts-come-from">Where do task prompts come from?<a class="headerlink" href="#where-do-task-prompts-come-from" title="Permanent link">&para;</a></h3>
+<p>The text written into each parquet row's <code>task_prompt</code> field is resolved
+from <code>dataset_config.yaml → task_ranges</code>. Each entry is
+<code>[start_episode, end_episode, task_name, task_prompt]</code>; at log time
+<code>SimDataLogger._get_task_prompt(episode_num)</code> finds the entry whose
+<code>[start, end]</code> range contains the active episode and stamps that prompt
+into both the row and <code>meta/tasks.parquet</code>. Edit <code>task_ranges</code> to attach
+different prompts to different episode-number ranges.</p>
+<h3 id="domain-randomisation">Domain randomisation<a class="headerlink" href="#domain-randomisation" title="Permanent link">&para;</a></h3>
+<p><code>isaac_scene_config.yaml → domain_randomization</code> exposes per-knob
+<code>enabled</code> flags so each block can be turned on/off independently:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">domain_randomization</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">camera_ego_focal_length</span><span class="p">:</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">range_mm</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">15.0</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">camera_external_pose</span><span class="p">:</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">pos_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> x</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">],</span><span class="nt"> y</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.02</span><span class="p p-Indicator">],</span><span class="nt"> z</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.01</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">rot_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> roll</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">],</span><span class="nt"> pitch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">],</span><span class="nt"> yaw</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-0.05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="nt">light_exposure</span><span class="p">:</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="nt">range_ev</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-3.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+<p>Each enabled block adds a corresponding <code>EventTermCfg(mode="reset", ...)</code>
+to <code>AddverbEventCfg</code> (via <code>sim_agent/addverb_env_cfg.py</code>), backed by the
+helper functions in <code>sim_agent/mdp/resets.py</code>
+(<code>randomize_camera_focal_length</code>, <code>randomize_camera_pose</code>,
+<code>randomize_light_exposure</code>). With every block disabled (the default) the
+env behaves identically to a no-DR run.</p>
 <hr />
 <h2 id="rendering-latency-tuning">Rendering / Latency Tuning<a class="headerlink" href="#rendering-latency-tuning" title="Permanent link">&para;</a></h2>
 <p>Teleop latency is dominated by sensor rendering. All rendering knobs live in
 one section of <code>isaac_scene_config.yaml</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">rendering</span><span class="p">:</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance&quot;</span><span class="w">                </span><span class="c1"># &quot;performance&quot; | &quot;balanced&quot; | &quot;quality&quot;</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">enable_translucency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">camera_update_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0333</span><span class="w">     </span><span class="c1"># ≈ 30 Hz sensor update</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">carb_settings</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                  </span><span class="c1"># raw carb overrides — use with caution</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">rendering</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance&quot;</span><span class="w">                </span><span class="c1"># &quot;performance&quot; | &quot;balanced&quot; | &quot;quality&quot;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">enable_translucency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">camera_update_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0333</span><span class="w">     </span><span class="c1"># ≈ 30 Hz sensor update</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">carb_settings</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                  </span><span class="c1"># raw carb overrides — use with caution</span>
 </span></code></pre></div>
 <p><code>mode: "performance"</code> already turns off RTX reflections / AO / DLSS and
 picks cheap defaults for shadows. <code>enable_translucency</code> is a first-class
@@ -1204,7 +1261,7 @@ on the host take effect at the next container launch without a rebuild.</p>
 <h2 id="running">Running<a class="headerlink" href="#running" title="Permanent link">&para;</a></h2>
 <h3 id="docker-recommended-sim-pc">Docker (recommended, Sim PC)<a class="headerlink" href="#docker-recommended-sim-pc" title="Permanent link">&para;</a></h3>
 <p>From <code>General_Autonomy_Special_Robots/</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sg<span class="w"> </span>docker<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;./docker/run_sim.sh --task Addverb-Teleop-Cam-v0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sg<span class="w"> </span>docker<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;./docker/run_sim.sh --task Addverb-Teleop-Cam-v0&quot;</span>
 </span></code></pre></div>
 <p>Extra args after <code>run_sim.sh</code> are forwarded to <code>addverb_agent.py</code> — e.g.
 <code>--leader_addr tcp://&lt;hw-ip&gt;:5556</code> or <code>--repo_root /workspace/datasets/run1
@@ -1213,28 +1270,28 @@ on the host take effect at the next container launch without a rebuild.</p>
 - <code>addverb_isaaclab/config/</code> → <code>:rw</code> (edit YAMLs on the host, relaunch container).
 - <code>datasets/</code> → <code>/workspace/datasets:rw</code> (dataset output).</p>
 <h3 id="bare-metal-hardware-pc-physical-arm">Bare-metal (Hardware PC — physical arm)<a class="headerlink" href="#bare-metal-hardware-pc-physical-arm" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">cd</span><span class="w"> </span>addverb_isaaclab
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Bring up the CAN interface first (if not already)</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>../addverb_arms/setup_all_cans.sh
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Canonical publisher</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>python<span class="w"> </span>bridge/bridge_sender.py<span class="w"> </span>--config<span class="w"> </span>config/bridge_config.yaml
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># OR the keyboard-enabled variant (R = reset, S = save &amp; home, E = exit)</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>python<span class="w"> </span>bridge/hardware_bridge_sender.py<span class="w"> </span>--interface<span class="w"> </span>can0<span class="w"> </span>--model<span class="w"> </span>ADD
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>addverb_isaaclab
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Bring up the CAN interface first (if not already)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>../addverb_arms/setup_all_cans.sh
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Canonical publisher</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>python<span class="w"> </span>bridge/bridge_sender.py<span class="w"> </span>--config<span class="w"> </span>config/bridge_config.yaml
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># OR the keyboard-enabled variant (R = reset, S = save &amp; home, E = exit)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>python<span class="w"> </span>bridge/hardware_bridge_sender.py<span class="w"> </span>--interface<span class="w"> </span>can0<span class="w"> </span>--model<span class="w"> </span>ADD
 </span></code></pre></div>
 <h3 id="bare-metal-sim-pc-teleop-only">Bare-metal (Sim PC — teleop only)<a class="headerlink" href="#bare-metal-sim-pc-teleop-only" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>addverb_isaaclab/sim_agent/addverb_agent.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--leader_addr<span class="w"> </span>tcp://&lt;hardware-pc-ip&gt;:5556
-</span></code></pre></div>
-<h3 id="bare-metal-sim-pc-with-data-collection">Bare-metal (Sim PC — with data collection)<a class="headerlink" href="#bare-metal-sim-pc-with-data-collection" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>addverb_isaaclab/sim_agent/addverb_agent.py<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>--leader_addr<span class="w"> </span>tcp://&lt;hardware-pc-ip&gt;:5556<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>--repo_root<span class="w"> </span>/data/addverb_sim_dataset<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span>--episode_num<span class="w"> </span><span class="m">0</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>--leader_addr<span class="w"> </span>tcp://&lt;hardware-pc-ip&gt;:5556
+</span></code></pre></div>
+<h3 id="bare-metal-sim-pc-with-data-collection">Bare-metal (Sim PC — with data collection)<a class="headerlink" href="#bare-metal-sim-pc-with-data-collection" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>addverb_isaaclab/sim_agent/addverb_agent.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--leader_addr<span class="w"> </span>tcp://&lt;hardware-pc-ip&gt;:5556<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>--repo_root<span class="w"> </span>/data/addverb_sim_dataset<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--episode_num<span class="w"> </span><span class="m">0</span>
 </span></code></pre></div>
 <hr />
 <h2 id="keyboard-controls-hardware_bridge_senderpy">Keyboard Controls (hardware_bridge_sender.py)<a class="headerlink" href="#keyboard-controls-hardware_bridge_senderpy" title="Permanent link">&para;</a></h2>
@@ -1265,14 +1322,14 @@ physical arm under power unexpectedly.</p>
 <p>Run once (or whenever the leader's home drifts). Easiest path — the
 launcher reads <code>launch_config.yaml</code> + <code>bridge_config.yaml</code>, activates
 the conda env, and backs up any existing <code>calibration.yaml</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>./scripts/launch_calibration.sh
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># overrides:</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">INTERFACE</span><span class="o">=</span>can1<span class="w"> </span>./scripts/launch_calibration.sh
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">MODEL</span><span class="o">=</span>ADD<span class="w">      </span>./scripts/launch_calibration.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>./scripts/launch_calibration.sh
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># overrides:</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">INTERFACE</span><span class="o">=</span>can1<span class="w"> </span>./scripts/launch_calibration.sh
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">MODEL</span><span class="o">=</span>ADD<span class="w">      </span>./scripts/launch_calibration.sh
 </span></code></pre></div>
 <p>Or call the underlying script directly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>python<span class="w"> </span>bridge/hardware_bridge_sender.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span>--interface<span class="w"> </span>can0<span class="w"> </span>--model<span class="w"> </span>ADD<span class="w"> </span>--calibrate
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>bridge/hardware_bridge_sender.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>--interface<span class="w"> </span>can0<span class="w"> </span>--model<span class="w"> </span>ADD<span class="w"> </span>--calibrate
 </span></code></pre></div>
 <p>The flow:
 1. You move the leader to the sim home pose (all 6 arm joints centred), press ENTER.
@@ -1296,13 +1353,13 @@ values produce mirrored world motion = paddles separate).</p>
 <h2 id="hardware-free-testing-mock-mode">Hardware-Free Testing (Mock Mode)<a class="headerlink" href="#hardware-free-testing-mock-mode" title="Permanent link">&para;</a></h2>
 <p>You can exercise the full simulation + logging pipeline without physical
 Addverb hardware using the mock publisher.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Terminal 1 — mock sender (static zeros or slow sine)</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>python<span class="w"> </span>bridge/mock_bridge_sender.py<span class="w"> </span>--sine
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Terminal 2 — sim agent</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>python<span class="w"> </span>addverb_isaaclab/sim_agent/addverb_agent.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--leader_addr<span class="w"> </span>tcp://127.0.0.1:5556
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Terminal 1 — mock sender (static zeros or slow sine)</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>python<span class="w"> </span>bridge/mock_bridge_sender.py<span class="w"> </span>--sine
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Terminal 2 — sim agent</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>python<span class="w"> </span>addverb_isaaclab/sim_agent/addverb_agent.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span>--leader_addr<span class="w"> </span>tcp://127.0.0.1:5556
 </span></code></pre></div>
 <hr />
 <h2 id="mdp-sim_agentmdp">MDP (<code>sim_agent/mdp/</code>)<a class="headerlink" href="#mdp-sim_agentmdp" title="Permanent link">&para;</a></h2>
@@ -1319,15 +1376,15 @@ following the Isaac Lab MDP convention:</p>
 teleop you drive episode boundaries with the bridge <code>R</code> key; enabling the
 termination would cause the sim follower to auto-reset mid-motion. Add it
 when you want headless / RL-style evaluation:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">isaaclab.managers</span><span class="w"> </span><span class="kn">import</span> <span class="n">TerminationTermCfg</span> <span class="k">as</span> <span class="n">DoneTerm</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.mdp</span><span class="w"> </span><span class="kn">import</span> <span class="n">cube_lifted_termination</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nd">@configclass</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">AddverbTerminationsCfg</span><span class="p">:</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="n">cube_lifted</span> <span class="o">=</span> <span class="n">DoneTerm</span><span class="p">(</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="n">func</span><span class="o">=</span><span class="n">cube_lifted_termination</span><span class="p">,</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;table_top_z&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s2">&quot;lift_height&quot;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span> <span class="s2">&quot;confirm_steps&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">isaaclab.managers</span><span class="w"> </span><span class="kn">import</span> <span class="n">TerminationTermCfg</span> <span class="k">as</span> <span class="n">DoneTerm</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.mdp</span><span class="w"> </span><span class="kn">import</span> <span class="n">cube_lifted_termination</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="nd">@configclass</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">AddverbTerminationsCfg</span><span class="p">:</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="n">cube_lifted</span> <span class="o">=</span> <span class="n">DoneTerm</span><span class="p">(</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>        <span class="n">func</span><span class="o">=</span><span class="n">cube_lifted_termination</span><span class="p">,</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>        <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;table_top_z&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s2">&quot;lift_height&quot;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span> <span class="s2">&quot;confirm_steps&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h2 id="edge-case-handling-agent-bridge">Edge-Case Handling (Agent + Bridge)<a class="headerlink" href="#edge-case-handling-agent-bridge" title="Permanent link">&para;</a></h2>
@@ -1369,20 +1426,20 @@ stateDiagram-v2
 </ul>
 <h3 id="2-launch-the-sim-with-logging-enabled">2. Launch the sim with logging enabled<a class="headerlink" href="#2-launch-the-sim-with-logging-enabled" title="Permanent link">&para;</a></h3>
 <p>From <code>General_Autonomy_Special_Robots/</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Bridge + sim on the same machine (the common case — default works):</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>sg<span class="w"> </span>docker<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;./docker/run_sim.sh \</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="s2">    --task Addverb-Teleop-Cam-v0 \</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s2">    --repo_root /workspace/datasets/session_001 \</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="s2">    --episode_num 0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Bridge + sim on the same machine (the common case — default works):</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sg<span class="w"> </span>docker<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;./docker/run_sim.sh \</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="s2">    --task Addverb-Teleop-Cam-v0 \</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="s2">    --repo_root /workspace/datasets/session_001 \</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="s2">    --episode_num 0&quot;</span>
 </span></code></pre></div>
 <p>If the bridge runs on a different host, set <code>--leader_addr</code> explicitly.
 <strong>Wrap the URL in quotes or avoid angle-bracket placeholders</strong> — an
 unquoted <code>&lt;hardware-pc-ip&gt;</code> is treated as input redirection by bash:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sg<span class="w"> </span>docker<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;./docker/run_sim.sh \</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="s2">    --task Addverb-Teleop-Cam-v0 \</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="s2">    --leader_addr &#39;tcp://10.0.4.117:5556&#39; \</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="s2">    --repo_root /workspace/datasets/session_001 \</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="s2">    --episode_num 0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sg<span class="w"> </span>docker<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;./docker/run_sim.sh \</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="s2">    --task Addverb-Teleop-Cam-v0 \</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="s2">    --leader_addr &#39;tcp://10.0.4.117:5556&#39; \</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="s2">    --repo_root /workspace/datasets/session_001 \</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s2">    --episode_num 0&quot;</span>
 </span></code></pre></div>
 <ul>
 <li>The default <code>--leader_addr</code> (<code>tcp://localhost:5556</code>, set in
@@ -1419,33 +1476,33 @@ the new <code>total_episodes</code> and <code>total_frames</code>.</p>
 <h3 id="5-multi-episode-recording">5. Multi-episode recording<a class="headerlink" href="#5-multi-episode-recording" title="Permanent link">&para;</a></h3>
 <p>Increment <code>--episode_num</code> for each recording and keep <code>--repo_root</code> the
 same:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># episode 0</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>--repo_root<span class="w"> </span>/workspace/datasets/session_001<span class="w"> </span>--episode_num<span class="w"> </span><span class="m">0</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># episode 1 (after exiting the previous session)</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">    </span>--repo_root<span class="w"> </span>/workspace/datasets/session_001<span class="w"> </span>--episode_num<span class="w"> </span><span class="m">1</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># episode 0</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span>--repo_root<span class="w"> </span>/workspace/datasets/session_001<span class="w"> </span>--episode_num<span class="w"> </span><span class="m">0</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># episode 1 (after exiting the previous session)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>./docker/run_sim.sh<span class="w"> </span>--task<span class="w"> </span>Addverb-Teleop-Cam-v0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">    </span>--repo_root<span class="w"> </span>/workspace/datasets/session_001<span class="w"> </span>--episode_num<span class="w"> </span><span class="m">1</span>
 </span></code></pre></div>
 <p>Each run produces one episode. Stale <code>--episode_num</code> values overwrite
 images into the same <code>episode_XXX/</code> folder but add a new row to the
 episodes parquet — pick numbers you haven't used yet in that session.</p>
 <h3 id="6-inspect-the-result">6. Inspect the result<a class="headerlink" href="#6-inspect-the-result" title="Permanent link">&para;</a></h3>
 <p>On the host (not inside the container):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Tree view</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>tree<span class="w"> </span>-L<span class="w"> </span><span class="m">4</span><span class="w"> </span>datasets/session_001
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Row count + columns</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="s2">import pandas as pd</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="s2">df = pd.read_parquet(&#39;datasets/session_001/data/chunk-000/file-000.parquet&#39;)</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="s2">print(&#39;rows:&#39;, len(df))</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="s2">print(&#39;columns:&#39;, list(df.columns))</span>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="s2">print(df.head(3))</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="s2">&quot;</span>
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># Metadata</span>
-</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json; print(json.dumps(json.load(open(&#39;datasets/session_001/meta/info.json&#39;)), indent=2))&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Tree view</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>tree<span class="w"> </span>-L<span class="w"> </span><span class="m">4</span><span class="w"> </span>datasets/session_001
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Row count + columns</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s2">import pandas as pd</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s2">df = pd.read_parquet(&#39;datasets/session_001/data/chunk-000/file-000.parquet&#39;)</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s2">print(&#39;rows:&#39;, len(df))</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s2">print(&#39;columns:&#39;, list(df.columns))</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="s2">print(df.head(3))</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="s2">&quot;</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Metadata</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json; print(json.dumps(json.load(open(&#39;datasets/session_001/meta/info.json&#39;)), indent=2))&quot;</span>
 </span></code></pre></div>
 <h3 id="quick-recording-checklist">Quick recording checklist<a class="headerlink" href="#quick-recording-checklist" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
@@ -1576,7 +1633,7 @@ cross-compatibility with dual-arm mobile data — the logger zero-pads to
 </tr>
 <tr>
 <td>Sim jaws move together instead of splitting apart</td>
-<td>The USD authors <code>slide_2_joint</code>'s joint frame flipped 180° about X so positive joint values give opposite world motion. If the flip is missing, re-run <code>tools/configure_gripper_joints.py</code> to re-apply it. <code>connect_*_2</code> bodies are welded rigidly to their slide via PhysicsFixedJoint; <code>connect_*_1</code> still hinge from <code>link_7</code> but no longer close the loop.</td>
+<td>The USD authors <code>slide_2_joint</code>'s joint frame flipped 180° about X so positive joint values give opposite world motion. If the flip is missing, re-run <code>tools/configure_gripper_joints.py</code> to re-apply it. <code>connect_*_2</code> bodies are welded rigidly to their slide via PhysicsFixedJoint; <code>connect_*_1</code> still hinge from <code>link_7</code> (itself welded to <code>link_6</code> via PhysicsFixedJoint) but no longer close the loop.</td>
 </tr>
 <tr>
 <td>Robot loads with no textures (only flat colours)</td>

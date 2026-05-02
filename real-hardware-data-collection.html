@@ -918,8 +918,11 @@
 <h1 id="real-hardware-data-collection-single-leader-single-follower">Real-Hardware Data Collection — Single Leader + Single Follower<a class="headerlink" href="#real-hardware-data-collection-single-leader-single-follower" title="Permanent link">&para;</a></h1>
 <p>End-to-end recipe for capturing teleoperation episodes on <strong>physical hardware
 only</strong> (no Isaac Sim, no AMR base): one leader arm drives one follower arm,
-three USB cameras stream synchronised RGB, and every episode lands in the
-same LeRobot-flavoured Parquet + JPEG layout used by the dual-arm pipeline.</p>
+two USB cameras (top + wrist) stream synchronised RGB, and every episode lands
+in the same LeRobot-flavoured Parquet + JPEG layout used by the dual-arm
+pipeline. The follower arm has 6 active joints + a parallel-jaw gripper
+(<code>link_7</code> is welded as a fixed flange in sim — irrelevant on hardware, where
+it has never been actuated).</p>
 <p>The whole pipeline runs inside a self-contained Docker container — the host
 only needs Docker and the SocketCAN devices wired up.</p>
 <blockquote>
@@ -942,15 +945,14 @@ flowchart LR
         L["Leader arm&lt;br/&gt;(can0)"]
         F["Follower arm&lt;br/&gt;(can1)"]
         C1["Camera 1 (top)&lt;br/&gt;USB"]
-        C2["Camera 2 (left)&lt;br/&gt;USB"]
-        C3["Camera 3 (right)&lt;br/&gt;USB"]
+        C2["Camera 2 (wrist)&lt;br/&gt;USB"]
     end
 
     subgraph CON["addverb-datacollect:latest"]
         direction TB
         DC["data-collect.py&lt;br/&gt;--single-arm --no-base"]
         LT["DataLoggingThread&lt;br/&gt;30 Hz"]
-        CT["camera_thread.py × 3"]
+        CT["camera_thread.py × 2"]
         DC --&gt; LT
         DC --&gt; CT
     end
@@ -959,7 +961,6 @@ flowchart LR
     F  -- 200 Hz CAN --&gt; DC
     C1 -- V4L2 --&gt; CT
     C2 -- V4L2 --&gt; CT
-    C3 -- V4L2 --&gt; CT
 
     LT --&gt;|local mode| EP[("episodes/episode_NNN/&lt;br/&gt;data.csv + JPEGs")]
     LT --&gt;|local mode| PQ[("addverb_single_arm_dataset/&lt;br/&gt;parquet + meta")]
@@ -1031,13 +1032,7 @@ flowchart LR
 <td><code>observation.images.camera2_images</code></td>
 <td>image</td>
 <td><code>(H,W,3)</code></td>
-<td>Left camera</td>
-</tr>
-<tr>
-<td><code>observation.images.camera3_images</code></td>
-<td>image</td>
-<td><code>(H,W,3)</code></td>
-<td>Right camera</td>
+<td>Wrist-mounted camera</td>
 </tr>
 </tbody>
 </table>
